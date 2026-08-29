@@ -17,7 +17,7 @@
 :root{
   --bg:#f7f7f7; --ink:#36231e; --ink-2:#2e1f1a; --muted:#8a716b; --muted-2:#6d5750;
   --line:#ddd; --line-soft:#e8e4e2; --pink:#ded4d3; --pink-line:#c2a49a;
-  --page:1000px; --col:459px;
+  --page:1000px; --col:555px;
 }
 *{box-sizing:border-box}
 html{font-size:16px}
@@ -64,7 +64,12 @@ img{max-width:100%;display:block}
 .breadcrumbs span{color:var(--muted-2)}
 
 /* ---------- товар ---------- */
-.product{display:grid;grid-template-columns:1fr var(--col);gap:40px;align-items:start}
+.product{display:grid;grid-template-columns:minmax(0,555px) 387px;gap:48px;
+  justify-content:center;align-items:start}
+.product__right{position:sticky;top:56px}
+.gallery-wrap{position:relative}
+.variant-badge{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,.92);
+  border-radius:3px;padding:5px 10px;font-size:12px;color:var(--ink)}
 .gallery{background:#fff;border:1px solid var(--line-soft);border-radius:4px;overflow:hidden}
 .vendor{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
   display:flex;gap:10px;align-items:center;margin-bottom:8px}
@@ -100,6 +105,7 @@ h1{font-size:18px;font-weight:600;line-height:1.1;letter-spacing:-.36px;color:va
 .btn{display:block;width:100%;text-align:center;background:var(--pink);border:2px solid var(--pink);
   border-radius:4px;color:var(--ink);font-size:13px;font-weight:400;padding:10px 30px;cursor:pointer;font-family:inherit}
 .btn--ghost{background:transparent;border-color:var(--pink-line)}
+.btn--wish{background:#665353;border-color:#665353;color:#fff}
 .buy-actions{grid-column:1/-1;display:grid;gap:10px;margin-top:6px}
 .store-link{grid-column:1/-1;font-size:13px;color:var(--muted-2);text-decoration:underline;text-underline-offset:2px}
 
@@ -111,25 +117,65 @@ h1{font-size:18px;font-weight:600;line-height:1.1;letter-spacing:-.36px;color:va
 .now-desc strong{font-weight:400}
 
 /* ---------- описание: новая версия (product-specs.css) ---------- */
-.cf-product{font-size:16px;font-weight:300;line-height:1.3;color:#36231e}
-.cf-product h3{margin:24px 0 8px;font-size:16px;font-weight:600;line-height:1.1;letter-spacing:-.32px;color:#36231e}
+.cf-product{font-size:17px;font-weight:300;line-height:1.6;color:#36231e}
+.cf-product h3{margin:38px 0 14px;font-size:20px;font-weight:600;line-height:1.25;letter-spacing:-.3px;color:#36231e}
 .cf-product>*:first-child{margin-top:0}
-.cf-product p{margin:0 0 12px;font-size:16px;font-weight:300;line-height:1.3}
+/* строка не длиннее ~65 знаков — иначе глаз теряет начало следующей */
+.cf-product p{margin:0 0 16px;font-size:17px;font-weight:300;line-height:1.6;max-width:62ch}
+.cf-lead{font-size:19px;line-height:1.55;max-width:60ch}
 .cf-product strong{font-weight:400}
 .cf-pricing-note{margin-bottom:20px}
 .cf-table-wrap{width:100%;margin:0 0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.cf-table{width:100%;border:1px solid #ddd;border-collapse:collapse;font-size:14px;font-weight:300;line-height:1.35;text-align:left;color:#2e1f1a}
-.cf-table caption{caption-side:top;padding:0 0 6px;font-size:13px;font-weight:300;line-height:1.3;color:#8a7a74;text-align:left;position:sticky;left:0}
-.cf-table th,.cf-table td{padding:8px;border:1px solid #ddd;vertical-align:top}
+.cf-table{width:100%;border:1px solid #ddd;border-collapse:collapse;font-size:16px;font-weight:300;line-height:1.45;text-align:left;color:#2e1f1a}
+.cf-table caption{caption-side:top;padding:0 0 8px;font-size:14px;font-weight:300;line-height:1.3;color:#8a7a74;text-align:left;position:sticky;left:0}
+.cf-table th,.cf-table td{padding:12px 14px;border:1px solid #ddd;vertical-align:top}
 .cf-table th{font-weight:600;background:#f5f5f5}
 .cf-table thead th{line-height:1.2}
 .cf-specs th[scope=row]{width:40%;font-weight:400;background:#fbfbfb}
 .cf-strands th[scope=row]{white-space:nowrap}
 .cf-yardage th[scope=rowgroup]{white-space:nowrap;vertical-align:top}
-.cf-care,.cf-notes{margin:0 0 20px;padding-left:18px;font-size:16px;font-weight:300;line-height:1.3}
-.cf-care li,.cf-notes li{margin-bottom:6px}
+.cf-care,.cf-notes{margin:0 0 22px;padding:0;list-style:none;max-width:62ch}
+.cf-care li,.cf-notes li{margin-bottom:12px;font-size:17px;line-height:1.55;
+  padding-left:30px;position:relative}
+.cf-care li:before{content:"✓";position:absolute;left:0;top:0;color:#8a716b;font-size:16px}
+.cf-notes li:before{content:"•";position:absolute;left:8px;top:-1px;color:#8a716b;font-size:18px}
+.cf-dont li:before{content:"✕";color:#a3736a}
 .cf-related{margin-top:20px;font-size:14px;color:#6b5a54}
 .cf-related a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- описание на всю ширину ---------- */
+.desc-full{margin:56px 0 0;padding-top:34px;border-top:1px solid var(--line-soft)}
+.desc-full > h2{font-size:24px;font-weight:600;letter-spacing:-.4px;color:var(--ink);margin:0 0 6px}
+.desc-full .sub{font-size:15px;color:var(--muted);margin:0 0 30px}
+.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 56px}
+.cols2 > *{min-width:0}
+
+/* блок спецификации из метаполей — единственный источник характеристик */
+.spec{border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:0 0 12px}
+.spec-row{display:grid;grid-template-columns:minmax(180px,240px) 1fr;border-bottom:1px solid var(--line)}
+.spec-row:last-child{border-bottom:0}
+.spec-row:nth-child(odd){background:#fbfbfb}
+.spec-row dt{padding:12px 14px;font-size:15px;font-weight:400;color:var(--muted-2);
+  border-right:1px solid var(--line);margin:0}
+.spec-row dd{padding:12px 14px;font-size:16px;color:var(--ink-2);margin:0;line-height:1.5}
+.spec-row dd small{display:block;font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.45}
+.from-meta{display:inline-block;font-size:11px;letter-spacing:.03em;text-transform:uppercase;
+  color:#6f8a72;background:#eaf2ea;border-radius:99px;padding:2px 8px;margin-left:8px;vertical-align:1px}
+.spec-note{font-size:13.5px;color:var(--muted);margin:0 0 26px;line-height:1.5}
+
+/* «чего не хватает» — служебная пометка для Елены, на сайте её не будет */
+.gap{border:1px dashed #c9a9a1;background:#fdf6f4;border-radius:4px;padding:14px 16px;margin:0 0 26px}
+.gap b{display:block;font-size:14px;font-weight:600;color:#8a5a4e;margin-bottom:6px}
+.gap p{margin:0;font-size:14px;line-height:1.55;color:#7a5a52;max-width:none}
+
+/* иконочные факты в правой колонке (как в теме) */
+.advantages{margin:22px 0 0;display:grid;gap:16px}
+.adv{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start}
+.adv b{display:block;font-weight:500;font-size:14px;color:var(--ink);margin-bottom:2px}
+.adv p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.45}
+.adv .more{text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+/* в новой версии характеристики живут только в общем блоке */
+.mode-new .adv--spec{display:none}
 
 /* ---------- таблица лимита ---------- */
 .limit-title{font-size:16px;font-weight:600;letter-spacing:-.32px;color:var(--ink);margin:26px 0 10px}
@@ -187,6 +233,8 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
 
 @media (max-width:900px){
   .product{grid-template-columns:1fr;gap:24px}
+  .product__right{position:static}
+  .cols2{grid-template-columns:1fr;gap:0}
   .calcs{grid-template-columns:1fr}
   .calc{border-right:0;border-bottom:1px solid var(--line-soft)}
   .cards{grid-template-columns:repeat(2,1fr)}
@@ -204,12 +252,15 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
   .buy{grid-template-columns:1fr}
   .cards{grid-template-columns:1fr}
   .f-grid{grid-template-columns:1fr}
-  .cf-table{font-size:13px}
-  .cf-table th,.cf-table td{padding:7px}
+  .cf-table{font-size:14px}
+  .cf-table th,.cf-table td{padding:9px 10px}
+  .spec-row{grid-template-columns:1fr}
+  .spec-row dt{border-right:0;border-bottom:1px solid var(--line);padding-bottom:6px}
+  .desc-full > h2{font-size:21px}
 }
 </style>
 </head>
-<body>
+<body class="mode-new">
 
 <!-- ДЕМО-ПАНЕЛЬ. На реальном сайте её нет. -->
 <div class="demo">
@@ -255,11 +306,63 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
   <div class="breadcrumbs"><a href="#">Home</a> — <a href="#">100natural</a> — <span>Arc 13000 · 1300m/1422yds per 100g/3.5oz · Ultra Fine · 68WS 32Se</span></div>
 
   <div class="product">
-    <div class="gallery">
-      <img src="{{PRODUCT}}" alt="Arc 13000 · 1300m/1422yds per 100g/3.5oz · Ultra Fine · 68WS 32Se — cone of brushed cashmere-silk yarn in Black Lux" width="700" height="700">
+
+    <!-- ЛЕВАЯ КОЛОНКА: фото. В текущей версии сюда же падает описание. -->
+    <div class="product__left">
+      <div class="gallery-wrap">
+        <div class="gallery">
+          <img src="{{PRODUCT}}" alt="Arc 13000 — cone of brushed cashmere-silk yarn in Black Lux" width="700" height="700">
+        </div>
+        <div class="variant-badge">Black Lux</div>
+      </div>
+
+      <section id="desc-now" hidden>
+        <h2 class="acc-title">Product Details</h2>
+        <div class="now-desc">
+            <h5><em>The price is per gram. Minimum order: 50g.</em></h5>
+            <h4>Vimar · Arc 13000 · 1300m/1422yds per 100g/3.5oz · 68% Cashmere (WS) 32% Silk (Se)</h4>
+            <p>Arc 13000 by Vimar is a cashmere-silk halo yarn of extraordinary delicacy, designed specifically for those who love the idea of a soft, airy halo but want nothing to do with mohair. This is the alternative: a halo built entirely from cashmere and silk, two of the finest natural fibers in the world, producing a fabric cloud that is incomparably softer, finer, and more refined than any mohair construction.</p>
+            <p>68% cashmere provides the halo fibers: impossibly soft, warm without weight, and with the quiet, enveloping luxury that is cashmere's signature. The halo is subtle and fine rather than bold and voluminous, more a gentle luminous warmth around each stitch than an obvious cloud, and that restraint is precisely what makes it beautiful. 32% silk adds a living pearlescent sheen that runs through every cashmere fiber in the halo, giving Arc 13000 a soft inner brilliance that shifts with light and movement.</p>
+            <p>Worked solo, Arc 13000 produces fabric of exceptional refinement: fine, luminous, warm, and tactilely extraordinary. Worked as a companion thread, it is transformative, wrapping any base yarn in a cashmere-silk halo that no mohair yarn can replicate. A single strand is enough to change everything.</p>
+            <p><strong>Versatile Use</strong></p>
+            <p>Arc 13000 works from 1 strand upward, with the halo expanding and deepening at every additional strand. Larger needles than the meterage suggests are recommended, the fine cashmere-silk halo needs space to breathe and express itself. For machine knitting, finer strand combinations are equally possible. Ideal for the finest shawls, refined sweaters, cardigans, and any piece where a delicate natural halo of cashmere and silk defines the design.</p>
+            <p><strong>Fiber Content</strong></p>
+            <p>68% Cashmere (WS) · 32% Silk (Se)</p>
+            <p><strong>Yarn Weight &amp; Meterage</strong></p>
+            <p><strong>1 strand (Ultra Fine):</strong> 1300m/1422yds per 100g/3.5oz · needles 2.5–4mm · hook 2.5–4mm</p>
+            <p><strong>2 strands (Lace):</strong> 650m/711yds per 100g/3.5oz · needles 3.5–5mm · hook 3.5–5mm</p>
+            <p><strong>3 strands (Fingering):</strong> 433m/474yds per 100g/3.5oz · needles 4–5mm · hook 4–5mm</p>
+            <p><strong>Project Yardage Estimates</strong></p>
+            <p><strong>Top/Tee</strong></p>
+            <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 62–77g (800–998m / 876–1093yds)</p>
+            <p><strong>2 strands = 650m/100g (Lace):</strong> 123–154g (800–1001m / 876–1096yds)</p>
+            <p><strong>3 strands = 433m/100g (Fingering):</strong> 185–231g (801–1000m / 877–1094yds)</p>
+            <p><strong>Sweater</strong></p>
+            <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 85–108g (1100–1400m / 1205–1532yds)</p>
+            <p><strong>2 strands = 650m/100g (Lace):</strong> 169–215g (1099–1398m / 1204–1530yds)</p>
+            <p><strong>3 strands = 433m/100g (Fingering):</strong> 254–323g (1100–1399m / 1205–1531yds)</p>
+            <p><strong>Cardigan</strong></p>
+            <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 108–138g (1400–1800m / 1532–1971yds)</p>
+            <p><strong>2 strands = 650m/100g (Lace):</strong> 215–277g (1398–1801m / 1530–1972yds)</p>
+            <p><strong>3 strands = 433m/100g (Fingering):</strong> 323–415g (1399–1797m / 1531–1967yds)</p>
+            <p><strong>Care Instructions</strong></p>
+            <p>Hand wash gently in cool water</p>
+            <p>Use a mild detergent suitable for cashmere and silk blends</p>
+            <p>Lay flat to dry on a horizontal surface</p>
+            <p>Do not wring, twist, or agitate</p>
+            <p>Silk becomes weaker when wet, handle with extra care</p>
+            <p>Do not brush or rub, halo is extremely delicate</p>
+            <p>Steam lightly at low temperature if necessary</p>
+            <p><strong>Swatching Required</strong></p>
+            <p>A washed and thoroughly dried swatch is essential. The cashmere-silk halo blooms further after washing, altering both gauge and the luminosity of the fabric surface. Always swatch on the needles you intend to use.</p>
+            <p><strong>Disclaimers</strong></p>
+            <p>Color may appear different due to screen and lighting. Yarn is not eligible for return or exchange.</p>
+          </div>
+      </section>
     </div>
 
-    <div class="info">
+    <!-- ПРАВАЯ КОЛОНКА: покупка. Липкая — не уезжает, пока читают описание. -->
+    <div class="product__right">
       <div class="vendor">VIMAR <a href="#">by Vimar</a></div>
       <h1>Arc 13000 · 1300m/1422yds per 100g/3.5oz · Ultra Fine · 68WS 32Se</h1>
 
@@ -271,14 +374,35 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       <div class="opt-label">Color: Black Lux</div>
       <div class="swatch"><i></i></div>
 
-      <div class="facts">
-        <div class="fact">
+      <div class="advantages">
+        <!-- .adv--spec = характеристики. В новой версии они уезжают в общий блок. -->
+        <div class="adv adv--spec">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M3 17c4-6 14-6 18 0M3 7c4 6 14 6 18 0"/></svg>
           <div><b>Material Composition</b><p>Cashmere, Silk</p></div>
         </div>
-        <div class="fact">
+        <div class="adv">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 19h16M7 19V9l5-4 5 4v10"/></svg>
           <div><b>5970 in Stock Now</b><p>Yarn sold by gram (min 50g). Enter total grams — e.g. "100" for 100g. Unless stated otherwise.</p></div>
+        </div>
+        <div class="adv">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+          <div><b>No returns</b><p>Due to the custom-wound nature of our yarn and storage requirements, all sales are final. We do n… <span class="more">Read more</span></p></div>
+        </div>
+        <div class="adv adv--spec">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 4 3 14 0 18M12 3c-3 4-3 14 0 18"/></svg>
+          <div><b>Made in</b><p>Japan</p></div>
+        </div>
+        <div class="adv adv--spec">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+          <div><b>Suitable For</b><p>Multi-strand knitting, Weaving, Hand knitting, Machine knitting, and Crochet</p></div>
+        </div>
+        <div class="adv adv--spec">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M12 3v18M5 8l7-5 7 5"/></svg>
+          <div><b>Yarn Weight Category</b><p>CYC #0 – Ultra Fine – 800–1400m/100g (875–1531yds/3.5oz)</p></div>
+        </div>
+        <div class="adv adv--spec">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          <div><b>Weaving Yarn Standard</b><p>Fine Weaving Yarn | NM 7.01–10 | Tex 100–142 | YPP 3501–5000 | 701–1000m/100g</p></div>
         </div>
       </div>
 
@@ -310,146 +434,10 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
 
         <div class="buy-actions">
           <button class="btn" type="button">Add to Cart</button>
-          <button class="btn btn--ghost" type="button">♡ Add To Wishlist (0)</button>
+          <button class="btn btn--wish" type="button">♡ Add To Wishlist (0)</button>
         </div>
         <a class="store-link" href="#">View store information</a>
       </div>
-
-      <!-- ================= ОПИСАНИЕ: ТЕКУЩАЯ ВЕРСИЯ ================= -->
-      <section id="desc-now" hidden>
-        <h2 class="acc-title">Product Details</h2>
-        <div class="now-desc">
-          <h5><em>The price is per gram. Minimum order: 50g.</em></h5>
-          <h4>Vimar · Arc 13000 · 1300m/1422yds per 100g/3.5oz · 68% Cashmere (WS) 32% Silk (Se)</h4>
-          <p>Arc 13000 by Vimar is a cashmere-silk halo yarn of extraordinary delicacy, designed specifically for those who love the idea of a soft, airy halo but want nothing to do with mohair. This is the alternative: a halo built entirely from cashmere and silk, two of the finest natural fibers in the world, producing a fabric cloud that is incomparably softer, finer, and more refined than any mohair construction.</p>
-          <p>68% cashmere provides the halo fibers: impossibly soft, warm without weight, and with the quiet, enveloping luxury that is cashmere's signature. The halo is subtle and fine rather than bold and voluminous, more a gentle luminous warmth around each stitch than an obvious cloud, and that restraint is precisely what makes it beautiful. 32% silk adds a living pearlescent sheen that runs through every cashmere fiber in the halo, giving Arc 13000 a soft inner brilliance that shifts with light and movement.</p>
-          <p>Worked solo, Arc 13000 produces fabric of exceptional refinement: fine, luminous, warm, and tactilely extraordinary. Worked as a companion thread, it is transformative, wrapping any base yarn in a cashmere-silk halo that no mohair yarn can replicate. A single strand is enough to change everything.</p>
-          <p><strong>Versatile Use</strong></p>
-          <p>Arc 13000 works from 1 strand upward, with the halo expanding and deepening at every additional strand. Larger needles than the meterage suggests are recommended, the fine cashmere-silk halo needs space to breathe and express itself. For machine knitting, finer strand combinations are equally possible. Ideal for the finest shawls, refined sweaters, cardigans, and any piece where a delicate natural halo of cashmere and silk defines the design.</p>
-          <p><strong>Fiber Content</strong></p>
-          <p>68% Cashmere (WS) · 32% Silk (Se)</p>
-          <p><strong>Yarn Weight &amp; Meterage</strong></p>
-          <p><strong>1 strand (Ultra Fine):</strong> 1300m/1422yds per 100g/3.5oz · needles 2.5–4mm · hook 2.5–4mm</p>
-          <p><strong>2 strands (Lace):</strong> 650m/711yds per 100g/3.5oz · needles 3.5–5mm · hook 3.5–5mm</p>
-          <p><strong>3 strands (Fingering):</strong> 433m/474yds per 100g/3.5oz · needles 4–5mm · hook 4–5mm</p>
-          <p><strong>Project Yardage Estimates</strong></p>
-          <p><strong>Top/Tee</strong></p>
-          <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 62–77g (800–998m / 876–1093yds)</p>
-          <p><strong>2 strands = 650m/100g (Lace):</strong> 123–154g (800–1001m / 876–1096yds)</p>
-          <p><strong>3 strands = 433m/100g (Fingering):</strong> 185–231g (801–1000m / 877–1094yds)</p>
-          <p><strong>Sweater</strong></p>
-          <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 85–108g (1100–1400m / 1205–1532yds)</p>
-          <p><strong>2 strands = 650m/100g (Lace):</strong> 169–215g (1099–1398m / 1204–1530yds)</p>
-          <p><strong>3 strands = 433m/100g (Fingering):</strong> 254–323g (1100–1399m / 1205–1531yds)</p>
-          <p><strong>Cardigan</strong></p>
-          <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 108–138g (1400–1800m / 1532–1971yds)</p>
-          <p><strong>2 strands = 650m/100g (Lace):</strong> 215–277g (1398–1801m / 1530–1972yds)</p>
-          <p><strong>3 strands = 433m/100g (Fingering):</strong> 323–415g (1399–1797m / 1531–1967yds)</p>
-          <p><strong>Care Instructions</strong></p>
-          <p>Hand wash gently in cool water</p>
-          <p>Use a mild detergent suitable for cashmere and silk blends</p>
-          <p>Lay flat to dry on a horizontal surface</p>
-          <p>Do not wring, twist, or agitate</p>
-          <p>Silk becomes weaker when wet, handle with extra care</p>
-          <p>Do not brush or rub, halo is extremely delicate</p>
-          <p>Steam lightly at low temperature if necessary</p>
-          <p><strong>Swatching Required</strong></p>
-          <p>A washed and thoroughly dried swatch is essential. The cashmere-silk halo blooms further after washing, altering both gauge and the luminosity of the fabric surface. Always swatch on the needles you intend to use.</p>
-          <p><strong>Disclaimers</strong></p>
-          <p>Color may appear different due to screen and lighting. Yarn is not eligible for return or exchange.</p>
-        </div>
-      </section>
-
-      <!-- ================= ОПИСАНИЕ: НОВАЯ ВЕРСИЯ ================= -->
-      <section id="desc-new">
-        <h2 class="acc-title">Product Details</h2>
-        <div class="cf-product">
-          <p class="cf-pricing-note"><strong>Price is per gram. Minimum order: 50 g.</strong></p>
-
-          <h3>Overview</h3>
-          <p>Arc 13000 by Vimar is a cashmere-silk halo yarn of extraordinary delicacy, designed specifically for those who love the idea of a soft, airy halo but want nothing to do with mohair. This is the alternative: a halo built entirely from cashmere and silk, two of the finest natural fibers in the world, producing a fabric cloud that is incomparably softer, finer, and more refined than any mohair construction.</p>
-          <p>68% cashmere provides the halo fibers: impossibly soft, warm without weight, and with the quiet, enveloping luxury that is cashmere's signature. The halo is subtle and fine rather than bold and voluminous, more a gentle luminous warmth around each stitch than an obvious cloud, and that restraint is precisely what makes it beautiful. 32% silk adds a living pearlescent sheen that runs through every cashmere fiber in the halo, giving Arc 13000 a soft inner brilliance that shifts with light and movement.</p>
-          <p>Worked solo, Arc 13000 produces fabric of exceptional refinement: fine, luminous, warm, and tactilely extraordinary. Worked as a companion thread, it is transformative, wrapping any base yarn in a cashmere-silk halo that no mohair yarn can replicate. A single strand is enough to change everything.</p>
-
-          <h3>Specifications</h3>
-          <div class="cf-table-wrap">
-            <table class="cf-table cf-specs">
-              <caption>Arc 13000 - specifications</caption>
-              <tbody>
-                <tr><th scope="row">Brand</th><td>Vimar</td></tr>
-                <tr><th scope="row">Yarn</th><td>Arc 13000</td></tr>
-                <tr><th scope="row">Fiber content</th><td>68% Cashmere (WS) · 32% Silk (Se)</td></tr>
-                <tr><th scope="row">Construction</th><td>Brushed cashmere-silk halo yarn, mohair-free</td></tr>
-                <tr><th scope="row">Format</th><td>Cone</td></tr>
-                <tr><th scope="row">Meterage</th><td>1300 m / 1422 yds per 100 g / 3.5 oz (1 strand)</td></tr>
-                <tr><th scope="row">Yarn weight</th><td>Ultra Fine (1 strand)</td></tr>
-                <tr><th scope="row">Recommended needles</th><td>2.5–4 mm (1 strand)</td></tr>
-                <tr><th scope="row">Country of origin</th><td>Italy</td></tr>
-                <tr><th scope="row">Care</th><td>Hand wash cool, lay flat to dry</td></tr>
-                <tr><th scope="row">Sold as</th><td>Per gram, minimum order 50 g</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3>Strands, weight and needles</h3>
-          <div class="cf-table-wrap">
-            <table class="cf-table cf-strands">
-              <caption>Held single or multiple - meterage per 100 g / 3.5 oz</caption>
-              <thead><tr><th scope="col">Strands</th><th scope="col">Yarn weight</th><th scope="col">Meterage</th><th scope="col">Needles / hook</th></tr></thead>
-              <tbody>
-                <tr><th scope="row">1 strand</th><td>Ultra Fine</td><td>1300 m / 1422 yds</td><td>2.5–4 mm</td></tr>
-                <tr><th scope="row">2 strands</th><td>Lace</td><td>650 m / 711 yds</td><td>3.5–5 mm</td></tr>
-                <tr><th scope="row">3 strands</th><td>Fingering</td><td>433 m / 474 yds</td><td>4–5 mm</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3>How much yarn you need</h3>
-          <div class="cf-table-wrap">
-            <table class="cf-table cf-yardage">
-              <caption>Estimated for an adult size M. Swatch first.</caption>
-              <thead><tr><th scope="col">Project</th><th scope="col">Strands</th><th scope="col">Yarn needed</th><th scope="col">Total length</th></tr></thead>
-              <tbody>
-                <tr><th scope="rowgroup" rowspan="3">Top / Tee</th><td>1 (Ultra Fine)</td><td>62–77 g</td><td>800–998 m / 876–1093 yds</td></tr>
-                <tr><td>2 (Lace)</td><td>123–154 g</td><td>800–1001 m / 876–1096 yds</td></tr>
-                <tr><td>3 (Fingering)</td><td>185–231 g</td><td>801–1000 m / 877–1094 yds</td></tr>
-                <tr><th scope="rowgroup" rowspan="3">Sweater</th><td>1 (Ultra Fine)</td><td>85–108 g</td><td>1100–1400 m / 1205–1532 yds</td></tr>
-                <tr><td>2 (Lace)</td><td>169–215 g</td><td>1099–1398 m / 1204–1530 yds</td></tr>
-                <tr><td>3 (Fingering)</td><td>254–323 g</td><td>1100–1399 m / 1205–1531 yds</td></tr>
-                <tr><th scope="rowgroup" rowspan="3">Cardigan</th><td>1 (Ultra Fine)</td><td>108–138 g</td><td>1400–1800 m / 1532–1971 yds</td></tr>
-                <tr><td>2 (Lace)</td><td>215–277 g</td><td>1398–1801 m / 1530–1972 yds</td></tr>
-                <tr><td>3 (Fingering)</td><td>323–415 g</td><td>1399–1797 m / 1531–1967 yds</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3>Working with this yarn</h3>
-          <p>Arc 13000 works from 1 strand upward, with the halo expanding and deepening at every additional strand. Larger needles than the meterage suggests are recommended: the fine cashmere-silk halo needs space to breathe and express itself. For machine knitting, finer strand combinations are equally possible. Ideal for the finest shawls, refined sweaters, cardigans, and any piece where a delicate natural halo of cashmere and silk defines the design.</p>
-
-          <h3>Swatching</h3>
-          <p>A washed and thoroughly dried swatch is essential. The cashmere-silk halo blooms further after washing, altering both gauge and the luminosity of the fabric surface. Always swatch on the needles you intend to use.</p>
-
-          <h3>Care instructions</h3>
-          <ul class="cf-care">
-            <li>Hand wash gently in cool water.</li>
-            <li>Use a mild detergent suitable for cashmere and silk blends.</li>
-            <li>Lay flat to dry on a horizontal surface.</li>
-            <li>Do not wring, twist, or agitate.</li>
-            <li>Silk becomes weaker when wet - handle with extra care.</li>
-            <li>Do not brush or rub - the halo is extremely delicate.</li>
-            <li>Steam lightly at low temperature if necessary.</li>
-          </ul>
-
-          <h3>Good to know</h3>
-          <ul class="cf-notes">
-            <li>Colors may appear different on screen depending on your display and lighting.</li>
-            <li>Yarn is sold by weight and is not eligible for return or exchange.</li>
-            <li>Small batches, rarely restocked - quantities are limited to what is on the cone.</li>
-          </ul>
-
-          <p class="cf-related">Explore more <a href="#">cashmere yarns</a>, <a href="#">silk yarns</a>, <a href="#">ultra fine weight yarns</a> and the full <a href="#">cone yarn collection</a>.</p>
-        </div>
-      </section>
 
       <h3 class="limit-title">Limit purchases</h3>
       <table class="custom-limit-table">
@@ -460,6 +448,92 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       </table>
     </div>
   </div>
+
+  <!-- ================= ОПИСАНИЕ: НОВАЯ ВЕРСИЯ, НА ВСЮ ШИРИНУ ================= -->
+  <section class="desc-full" id="desc-new">
+    <h2>About this yarn</h2>
+    <p class="sub">Arc 13000 by Vimar · sold by the gram, wound to order</p>
+
+    <div class="cf-product">
+      <p class="cf-lead">A cashmere-silk yarn with a fine halo, for knitters who want the softness of a halo without mohair.</p>
+      <p>The halo comes from cashmere, so it is quiet and warm rather than bold and fluffy. The silk running through it catches the light as the fabric moves.</p>
+      <p>Use it on its own for something very fine, or hold it together with another yarn to wrap that yarn in a soft halo. One strand is enough to change how a fabric feels.</p>
+
+      <h3>Specifications</h3>
+      <dl class="spec">
+        <div class="spec-row"><dt>Material composition</dt><dd>Cashmere, Silk<small>68% cashmere (WS), 32% silk (Se)</small></dd></div>
+        <div class="spec-row"><dt>Made in</dt><dd>Japan</dd></div>
+        <div class="spec-row"><dt>Yarn weight category</dt><dd>CYC #0 — Ultra Fine<small>800–1400 m per 100 g (875–1531 yds per 3.5 oz)</small></dd></div>
+        <div class="spec-row"><dt>Meterage</dt><dd>1300 m / 1422 yds per 100 g<small>Single strand, straight off the cone</small></dd></div>
+        <div class="spec-row"><dt>Suitable for</dt><dd>Hand knitting, machine knitting, crochet, weaving, multi-strand knitting</dd></div>
+        <div class="spec-row"><dt>Weaving yarn standard</dt><dd>Fine Weaving Yarn<small>NM 7.01–10 · Tex 100–142 · YPP 3501–5000</small></dd></div>
+        <div class="spec-row"><dt>Format</dt><dd>Cone, wound to order</dd></div>
+        <div class="spec-row"><dt>Sold as</dt><dd>Per gram · minimum order 50 g</dd></div>
+      </dl>
+      <p class="spec-note">Эти строки берутся из полей товара в Shopify, а не из текста. Заполняются один раз в карточке — выводятся одинаково на всех товарах.</p>
+
+      <div class="gap">
+        <b>Здесь не хватает того, из-за чего бобинную пряжу боятся покупать</b>
+        <p>Ни в одном из 139 товаров нет ответа: есть ли на нити замасливатель и надо ли стирать до вязания, сколько граммов на бобине, номер пряжи, плотность вязания в петлях на 10 см, повторится ли партия. Это пять новых полей в Shopify, а не текст.</p>
+      </div>
+
+      <h3>Strands and needles</h3>
+      <p>Hold more strands together to get a thicker yarn. Larger needles than the meterage suggests work best — the halo needs room to open up.</p>
+      <div class="cf-table-wrap">
+        <table class="cf-table cf-strands">
+          <caption>Meterage is per 100 g / 3.5 oz</caption>
+          <thead><tr><th scope="col">Strands</th><th scope="col">Yarn weight</th><th scope="col">Meterage</th><th scope="col">Needles / hook</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1 strand</th><td>Ultra Fine</td><td>1300 m / 1422 yds</td><td>2.5–4 mm</td></tr>
+            <tr><th scope="row">2 strands</th><td>Lace</td><td>650 m / 711 yds</td><td>3.5–5 mm</td></tr>
+            <tr><th scope="row">3 strands</th><td>Fingering</td><td>433 m / 474 yds</td><td>4–5 mm</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>How much yarn you need</h3>
+      <p>For an adult size M. Knit a swatch before you order — these are estimates, and yarn cannot be returned.</p>
+      <div class="cf-table-wrap">
+        <table class="cf-table cf-yardage">
+          <thead><tr><th scope="col">Project</th><th scope="col">Strands</th><th scope="col">Yarn needed</th><th scope="col">Total length</th></tr></thead>
+          <tbody>
+            <tr><th scope="rowgroup" rowspan="3">Top / Tee</th><td>1 — Ultra Fine</td><td>62–77 g</td><td>800–998 m / 876–1093 yds</td></tr>
+            <tr><td>2 — Lace</td><td>123–154 g</td><td>800–1001 m / 876–1096 yds</td></tr>
+            <tr><td>3 — Fingering</td><td>185–231 g</td><td>801–1000 m / 877–1094 yds</td></tr>
+            <tr><th scope="rowgroup" rowspan="3">Sweater</th><td>1 — Ultra Fine</td><td>85–108 g</td><td>1100–1400 m / 1205–1532 yds</td></tr>
+            <tr><td>2 — Lace</td><td>169–215 g</td><td>1099–1398 m / 1204–1530 yds</td></tr>
+            <tr><td>3 — Fingering</td><td>254–323 g</td><td>1100–1399 m / 1205–1531 yds</td></tr>
+            <tr><th scope="rowgroup" rowspan="3">Cardigan</th><td>1 — Ultra Fine</td><td>108–138 g</td><td>1400–1800 m / 1532–1971 yds</td></tr>
+            <tr><td>2 — Lace</td><td>215–277 g</td><td>1398–1801 m / 1530–1972 yds</td></tr>
+            <tr><td>3 — Fingering</td><td>323–415 g</td><td>1399–1797 m / 1531–1967 yds</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Before you knit</h3>
+      <p>Knit a swatch, wash it and let it dry completely. The halo opens up after washing, so both the gauge and the look of the fabric change. Use the needles you plan to knit with.</p>
+
+      <h3>How to care for it</h3>
+      <ul class="cf-care">
+        <li>Hand wash in cool water with a mild detergent for cashmere and silk.</li>
+        <li>Press the water out and lay the piece flat to dry.</li>
+        <li>Steam lightly at low temperature if it needs it.</li>
+      </ul>
+      <ul class="cf-care cf-dont">
+        <li>Do not wring, twist or rub — silk is weak when wet.</li>
+        <li>Do not brush the surface. The halo is delicate.</li>
+      </ul>
+
+      <h3>Good to know</h3>
+      <ul class="cf-notes">
+        <li>Colors look different on different screens.</li>
+        <li>Yarn is wound to order and cannot be returned or exchanged.</li>
+        <li>Small batches, rarely restocked. What is on the cone is what there is.</li>
+      </ul>
+
+      <p class="cf-related">More like this: <a href="#">cashmere yarns</a>, <a href="#">silk yarns</a>, <a href="#">ultra fine weight</a>, <a href="#">all cone yarns</a>.</p>
+    </div>
+  </section>
 
   <!-- ================= КАЛЬКУЛЯТОРЫ ================= -->
   <div class="calcs">
@@ -564,9 +638,11 @@ function show(which){
   secNew.hidden = !isNew; secNow.hidden = isNew;
   btnNew.setAttribute('aria-pressed', String(isNew));
   btnNow.setAttribute('aria-pressed', String(!isNew));
+  document.body.classList.toggle('mode-new', isNew);
+  document.body.classList.toggle('mode-now', !isNew);
   note.textContent = isNew
-    ? '8 разделов и 3 таблицы. Дизайн, шрифт и цвета не менялись.'
-    : '36 абзацев подряд с одинаковым отступом 8 px.';
+    ? 'Описание на всю ширину, характеристики — из полей Shopify.'
+    : 'Описание в колонке 555 px под фото, 36 абзацев подряд.';
 }
 btnNow.addEventListener('click', function(){ show('now'); });
 btnNew.addEventListener('click', function(){ show('new'); });
