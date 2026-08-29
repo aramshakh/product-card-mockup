@@ -109,13 +109,6 @@ h1{font-size:18px;font-weight:600;line-height:1.1;letter-spacing:-.36px;color:va
 .buy-actions{grid-column:1/-1;display:grid;gap:10px;margin-top:6px}
 .store-link{grid-column:1/-1;font-size:13px;color:var(--muted-2);text-decoration:underline;text-underline-offset:2px}
 
-/* ---------- описание: текущая версия ---------- */
-.acc-title{font-size:18px;font-weight:600;letter-spacing:-.36px;color:var(--ink);margin:28px 0 14px}
-.now-desc h4,.now-desc h5{font-size:16px;font-weight:600;line-height:1.1;letter-spacing:-.32px;color:var(--ink);margin:0 0 7px}
-.now-desc h5{margin-bottom:17px}
-.now-desc p{font-size:16px;font-weight:300;line-height:1.3;color:var(--ink);margin:0 0 8px}
-.now-desc strong{font-weight:400}
-
 /* ---------- описание: новая версия (product-specs.css) ---------- */
 .cf-product{font-size:17px;font-weight:300;line-height:1.6;color:#36231e}
 .cf-product h3{margin:38px 0 14px;font-size:20px;font-weight:600;line-height:1.25;letter-spacing:-.3px;color:#36231e}
@@ -142,6 +135,33 @@ h1{font-size:18px;font-weight:600;line-height:1.1;letter-spacing:-.36px;color:va
 .cf-dont li:before{content:"✕";color:#a3736a}
 .cf-related{margin-top:20px;font-size:14px;color:#6b5a54}
 .cf-related a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- вкладка «Структура» ---------- */
+#doc{display:none;padding:34px 0 24px;max-width:900px}
+.view-doc #doc{display:block}
+.view-doc .header,.view-doc footer,.view-doc main > *:not(#doc){display:none}
+#doc h2{font-size:24px;font-weight:600;letter-spacing:-.4px;color:var(--ink);margin:0 0 8px}
+#doc h3{font-size:18px;font-weight:600;color:var(--ink);margin:38px 0 12px}
+#doc p{font-size:16px;line-height:1.6;max-width:70ch;margin:0 0 14px}
+#doc .lead{font-size:17px;color:var(--muted-2);margin-bottom:30px}
+#doc table{width:100%;border:1px solid var(--line);border-collapse:collapse;font-size:15px;margin:0 0 18px}
+#doc th,#doc td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;line-height:1.5}
+#doc thead th{background:#f5f5f5;font-weight:600}
+#doc tbody th{background:#fbfbfb;font-weight:400;color:var(--muted-2)}
+#doc code{background:#efeae8;border-radius:3px;padding:1px 5px;font-size:14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+#doc ul{margin:0 0 18px;padding-left:20px;max-width:70ch}
+#doc li{font-size:16px;line-height:1.6;margin-bottom:8px}
+#doc .ok{color:#3c6a4c}
+#doc .new{color:#8a5a4e}
+.tree{background:#fff;border:1px solid var(--line-soft);border-radius:4px;padding:18px 22px;margin:0 0 18px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;line-height:1.95}
+.tree div{white-space:nowrap;overflow-x:auto}
+.tree .l1{font-weight:600;color:var(--ink)}
+.tree .l2{padding-left:24px;font-weight:600}
+.tree .l3{padding-left:48px}
+.tree em{color:var(--muted);font-family:Inter,sans-serif;font-style:normal;font-size:13px}
+tr.new-field td,tr.new-field th{background:#fdf6f4}
 
 /* ---------- описание на всю ширину ---------- */
 .desc-full{margin:56px 0 0;padding-top:34px;border-top:1px solid var(--line-soft)}
@@ -174,8 +194,6 @@ h1{font-size:18px;font-weight:600;line-height:1.1;letter-spacing:-.36px;color:va
 .adv b{display:block;font-weight:500;font-size:14px;color:var(--ink);margin-bottom:2px}
 .adv p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.45}
 .adv .more{text-decoration:underline;text-underline-offset:2px;cursor:pointer}
-/* в новой версии характеристики живут только в общем блоке */
-.mode-new .adv--spec{display:none}
 
 /* ---------- таблица лимита ---------- */
 .limit-title{font-size:16px;font-weight:600;letter-spacing:-.32px;color:var(--ink);margin:26px 0 10px}
@@ -184,8 +202,9 @@ h1{font-size:18px;font-weight:600;line-height:1.1;letter-spacing:-.36px;color:va
 .custom-limit-table th{background:#f5f5f5;font-weight:600}
 
 /* ---------- калькуляторы ---------- */
+.calcs-intro{font-size:16px;line-height:1.6;max-width:62ch;margin:0 0 18px;color:var(--ink-2)}
 .calcs{display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border:1px solid var(--line-soft);
-  border-radius:4px;margin:44px 0 0}
+  border-radius:4px;margin:0}
 .calc{padding:20px 22px;border-right:1px solid var(--line-soft)}
 .calc:last-child{border-right:0}
 .calc h3{font-size:15px;font-weight:600;color:var(--ink);margin:0 0 12px}
@@ -260,16 +279,15 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
 }
 </style>
 </head>
-<body class="mode-new">
+<body>
 
 <!-- ДЕМО-ПАНЕЛЬ. На реальном сайте её нет. -->
 <div class="demo">
-  <b>Cone &amp; Fiber</b> · макет карточки товара
-  <div class="demo-toggle" role="group" aria-label="Версия страницы">
-    <button type="button" id="btn-now" aria-pressed="false">Сейчас на сайте</button>
-    <button type="button" id="btn-new" aria-pressed="true">Новая версия</button>
+  <b>Cone &amp; Fiber</b> · новая карточка товара
+  <div class="demo-toggle" role="tablist" aria-label="Что показать">
+    <button type="button" id="tab-page" role="tab" aria-pressed="true">Карточка</button>
+    <button type="button" id="tab-doc" role="tab" aria-pressed="false">Структура</button>
   </div>
-  <small id="demo-note">Меняется только блок описания. Всё остальное — как на сайте.</small>
   <span class="sp"></span>
   <small>Arc 13000 · 68% кашемир, 32% шёлк</small>
 </div>
@@ -315,50 +333,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
         </div>
         <div class="variant-badge">Black Lux</div>
       </div>
-
-      <section id="desc-now" hidden>
-        <h2 class="acc-title">Product Details</h2>
-        <div class="now-desc">
-            <h5><em>The price is per gram. Minimum order: 50g.</em></h5>
-            <h4>Vimar · Arc 13000 · 1300m/1422yds per 100g/3.5oz · 68% Cashmere (WS) 32% Silk (Se)</h4>
-            <p>Arc 13000 by Vimar is a cashmere-silk halo yarn of extraordinary delicacy, designed specifically for those who love the idea of a soft, airy halo but want nothing to do with mohair. This is the alternative: a halo built entirely from cashmere and silk, two of the finest natural fibers in the world, producing a fabric cloud that is incomparably softer, finer, and more refined than any mohair construction.</p>
-            <p>68% cashmere provides the halo fibers: impossibly soft, warm without weight, and with the quiet, enveloping luxury that is cashmere's signature. The halo is subtle and fine rather than bold and voluminous, more a gentle luminous warmth around each stitch than an obvious cloud, and that restraint is precisely what makes it beautiful. 32% silk adds a living pearlescent sheen that runs through every cashmere fiber in the halo, giving Arc 13000 a soft inner brilliance that shifts with light and movement.</p>
-            <p>Worked solo, Arc 13000 produces fabric of exceptional refinement: fine, luminous, warm, and tactilely extraordinary. Worked as a companion thread, it is transformative, wrapping any base yarn in a cashmere-silk halo that no mohair yarn can replicate. A single strand is enough to change everything.</p>
-            <p><strong>Versatile Use</strong></p>
-            <p>Arc 13000 works from 1 strand upward, with the halo expanding and deepening at every additional strand. Larger needles than the meterage suggests are recommended, the fine cashmere-silk halo needs space to breathe and express itself. For machine knitting, finer strand combinations are equally possible. Ideal for the finest shawls, refined sweaters, cardigans, and any piece where a delicate natural halo of cashmere and silk defines the design.</p>
-            <p><strong>Fiber Content</strong></p>
-            <p>68% Cashmere (WS) · 32% Silk (Se)</p>
-            <p><strong>Yarn Weight &amp; Meterage</strong></p>
-            <p><strong>1 strand (Ultra Fine):</strong> 1300m/1422yds per 100g/3.5oz · needles 2.5–4mm · hook 2.5–4mm</p>
-            <p><strong>2 strands (Lace):</strong> 650m/711yds per 100g/3.5oz · needles 3.5–5mm · hook 3.5–5mm</p>
-            <p><strong>3 strands (Fingering):</strong> 433m/474yds per 100g/3.5oz · needles 4–5mm · hook 4–5mm</p>
-            <p><strong>Project Yardage Estimates</strong></p>
-            <p><strong>Top/Tee</strong></p>
-            <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 62–77g (800–998m / 876–1093yds)</p>
-            <p><strong>2 strands = 650m/100g (Lace):</strong> 123–154g (800–1001m / 876–1096yds)</p>
-            <p><strong>3 strands = 433m/100g (Fingering):</strong> 185–231g (801–1000m / 877–1094yds)</p>
-            <p><strong>Sweater</strong></p>
-            <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 85–108g (1100–1400m / 1205–1532yds)</p>
-            <p><strong>2 strands = 650m/100g (Lace):</strong> 169–215g (1099–1398m / 1204–1530yds)</p>
-            <p><strong>3 strands = 433m/100g (Fingering):</strong> 254–323g (1100–1399m / 1205–1531yds)</p>
-            <p><strong>Cardigan</strong></p>
-            <p><strong>1 strand = 1300m/100g (Ultra Fine):</strong> 108–138g (1400–1800m / 1532–1971yds)</p>
-            <p><strong>2 strands = 650m/100g (Lace):</strong> 215–277g (1398–1801m / 1530–1972yds)</p>
-            <p><strong>3 strands = 433m/100g (Fingering):</strong> 323–415g (1399–1797m / 1531–1967yds)</p>
-            <p><strong>Care Instructions</strong></p>
-            <p>Hand wash gently in cool water</p>
-            <p>Use a mild detergent suitable for cashmere and silk blends</p>
-            <p>Lay flat to dry on a horizontal surface</p>
-            <p>Do not wring, twist, or agitate</p>
-            <p>Silk becomes weaker when wet, handle with extra care</p>
-            <p>Do not brush or rub, halo is extremely delicate</p>
-            <p>Steam lightly at low temperature if necessary</p>
-            <p><strong>Swatching Required</strong></p>
-            <p>A washed and thoroughly dried swatch is essential. The cashmere-silk halo blooms further after washing, altering both gauge and the luminosity of the fabric surface. Always swatch on the needles you intend to use.</p>
-            <p><strong>Disclaimers</strong></p>
-            <p>Color may appear different due to screen and lighting. Yarn is not eligible for return or exchange.</p>
-          </div>
-      </section>
     </div>
 
     <!-- ПРАВАЯ КОЛОНКА: покупка. Липкая — не уезжает, пока читают описание. -->
@@ -374,12 +348,9 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       <div class="opt-label">Color: Black Lux</div>
       <div class="swatch"><i></i></div>
 
+      <!-- В правой колонке остаётся только то, что нужно для покупки.
+           Характеристики переехали в общий блок описания и не дублируются. -->
       <div class="advantages">
-        <!-- .adv--spec = характеристики. В новой версии они уезжают в общий блок. -->
-        <div class="adv adv--spec">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M3 17c4-6 14-6 18 0M3 7c4 6 14 6 18 0"/></svg>
-          <div><b>Material Composition</b><p>Cashmere, Silk</p></div>
-        </div>
         <div class="adv">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 19h16M7 19V9l5-4 5 4v10"/></svg>
           <div><b>5970 in Stock Now</b><p>Yarn sold by gram (min 50g). Enter total grams — e.g. "100" for 100g. Unless stated otherwise.</p></div>
@@ -387,22 +358,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
         <div class="adv">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
           <div><b>No returns</b><p>Due to the custom-wound nature of our yarn and storage requirements, all sales are final. We do n… <span class="more">Read more</span></p></div>
-        </div>
-        <div class="adv adv--spec">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 4 3 14 0 18M12 3c-3 4-3 14 0 18"/></svg>
-          <div><b>Made in</b><p>Japan</p></div>
-        </div>
-        <div class="adv adv--spec">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
-          <div><b>Suitable For</b><p>Multi-strand knitting, Weaving, Hand knitting, Machine knitting, and Crochet</p></div>
-        </div>
-        <div class="adv adv--spec">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M12 3v18M5 8l7-5 7 5"/></svg>
-          <div><b>Yarn Weight Category</b><p>CYC #0 – Ultra Fine – 800–1400m/100g (875–1531yds/3.5oz)</p></div>
-        </div>
-        <div class="adv adv--spec">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-          <div><b>Weaving Yarn Standard</b><p>Fine Weaving Yarn | NM 7.01–10 | Tex 100–142 | YPP 3501–5000 | 701–1000m/100g</p></div>
         </div>
       </div>
 
@@ -439,7 +394,7 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
         <a class="store-link" href="#">View store information</a>
       </div>
 
-      <h3 class="limit-title">Limit purchases</h3>
+      <h2 class="limit-title">Limit purchases</h2>
       <table class="custom-limit-table">
         <tbody>
           <tr><th>Min (g)</th><th>Max (g)</th></tr>
@@ -536,6 +491,8 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
   </section>
 
   <!-- ================= КАЛЬКУЛЯТОРЫ ================= -->
+  <h2 class="block-title">Plan your order</h2>
+  <p class="calcs-intro">Choose the finished yarn weight, see how much you need, and decide how many cones to split it between.</p>
   <div class="calcs">
     <div class="calc">
       <h3>Choose your finished yarn weight</h3>
@@ -570,6 +527,110 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       </div>
     </div>
   </div>
+
+
+  <!-- ================= ВКЛАДКА: СТРУКТУРА ================= -->
+  <section id="doc">
+    <h2>Структура новой карточки товара</h2>
+    <p class="lead">Что где лежит, откуда берётся каждая строка и что нужно завести в Shopify.
+      Документ к макету на соседней вкладке. Снято с живой карточки coneandfiber.com 29.08.2026.</p>
+
+    <h3>1. Порядок блоков на странице</h3>
+    <table>
+      <thead><tr><th>№</th><th>Блок</th><th>Откуда берётся</th><th>Что меняем</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Шапка, меню, поиск</td><td>Тема Stockmart</td><td>—</td></tr>
+        <tr><td>2</td><td>Хлебные крошки</td><td>Тема</td><td>Добавить разметку BreadcrumbList</td></tr>
+        <tr><td>3</td><td>Фото + бейдж варианта</td><td>Товар</td><td>Заполнить alt у изображений</td></tr>
+        <tr><td>4</td><td>Бренд, H1, цена</td><td>Товар</td><td>Пересобрать заголовок, см. п. 6</td></tr>
+        <tr><td>5</td><td>Выбор цвета</td><td>Варианты</td><td>—</td></tr>
+        <tr><td>6</td><td>Факты покупки: остаток, возврат</td><td>Метаполя</td><td>Оставить только эти два</td></tr>
+        <tr><td>7</td><td>Граммы, бобины, итоговая цена</td><td>Тема + приложение</td><td>—</td></tr>
+        <tr><td>8</td><td>Limit purchases</td><td>Тема</td><td>—</td></tr>
+        <tr class="new-field"><td>9</td><td><b>Описание на всю ширину</b></td><td>Метаполя + текст товара</td><td><b>Новый блок вместо колонки 555px</b></td></tr>
+        <tr><td>10</td><td>Три калькулятора</td><td>Секция Custom Liquid</td><td>Оставляем внизу</td></tr>
+        <tr><td>11</td><td>Отзывы</td><td>Приложение</td><td>—</td></tr>
+        <tr><td>12</td><td>Похожие товары</td><td>Тема</td><td>—</td></tr>
+        <tr><td>13</td><td>Футер</td><td>Тема</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <p>Правая колонка становится липкой: кнопка Add to Cart остаётся на экране, пока читают описание.</p>
+
+    <h3>2. Иерархия заголовков</h3>
+    <div class="tree">
+      <div class="l1">H1 — название товара</div>
+      <div class="l2">H2 — About this yarn <em>← описание, на всю ширину</em></div>
+      <div class="l3">H3 — Specifications <em>← из метаполей</em></div>
+      <div class="l3">H3 — Strands and needles <em>← таблица</em></div>
+      <div class="l3">H3 — How much yarn you need <em>← таблица</em></div>
+      <div class="l3">H3 — Before you knit</div>
+      <div class="l3">H3 — How to care for it</div>
+      <div class="l3">H3 — Good to know</div>
+      <div class="l2">H2 — Customer Reviews</div>
+      <div class="l2">H2 — Check Out These Related Products</div>
+    </div>
+    <p>Сейчас на сайте: H1 идёт в коде после описания, есть два пустых заголовка,
+      внутри описания скачок H3 → H5 → H4, а весь блок отрисован дважды. Всё это уходит.</p>
+
+    <h3>3. Спецификация: источник каждой строки</h3>
+    <p>Характеристики выводятся <b>из одного места</b>. Проза в описании их больше не повторяет.</p>
+    <table>
+      <thead><tr><th>Строка</th><th>Источник</th><th>Значение на Arc 13000</th></tr></thead>
+      <tbody>
+        <tr><th>Material composition</th><td class="ok">Метаполе, есть</td><td>Cashmere, Silk</td></tr>
+        <tr><th>Made in</th><td class="ok">Метаполе, есть</td><td>Japan</td></tr>
+        <tr><th>Yarn weight category</th><td class="ok">Метаполе, есть</td><td>CYC #0 — Ultra Fine</td></tr>
+        <tr><th>Suitable for</th><td class="ok">Метаполе, есть</td><td>Hand / machine knitting, crochet, weaving</td></tr>
+        <tr><th>Weaving yarn standard</th><td class="ok">Метаполе, есть</td><td>NM 7.01–10 · Tex 100–142</td></tr>
+        <tr><th>Sold as</th><td class="ok">Метаполе, есть</td><td>Per gram · min 50 g</td></tr>
+        <tr class="new-field"><th>Meterage</th><td class="new">Сейчас в тексте — завести полем</td><td>1300 m / 1422 yds per 100 g</td></tr>
+        <tr class="new-field"><th>Format</th><td class="new">Сейчас в тексте — завести полем</td><td>Cone, wound to order</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4. Поля, которых нет ни у одного из 139 товаров</h3>
+    <p>Это ответы на вопросы, из-за которых бобинную пряжу боятся покупать. Сейчас их нет нигде: ни в тексте, ни в полях.</p>
+    <table>
+      <thead><tr><th>Поле</th><th>Зачем</th><th>Пример значения</th></tr></thead>
+      <tbody>
+        <tr class="new-field"><th>Spinning oil</th><td>Первый вопрос новичка: в масле ли нить и стирать ли до вязания</td><td>Yes — wash the finished piece</td></tr>
+        <tr class="new-field"><th>Cone weight</th><td>Сколько граммов физически на бобине</td><td>≈ 500 g</td></tr>
+        <tr class="new-field"><th>Yarn count</th><td>Номер пряжи, по нему подбирают машину и сложение</td><td>2/28 Nm</td></tr>
+        <tr class="new-field"><th>Gauge</th><td>Плотность в петлях на 10 см. Без неё совет «свяжите образец» не с чем сравнить</td><td>28 sts × 36 rows, 3 mm</td></tr>
+        <tr class="new-field"><th>Dye lot</th><td>Повторится ли цвет. Для стока — критично</td><td>Lot 4471, not repeatable</td></tr>
+      </tbody>
+    </table>
+
+    <h3>5. Что уходит из текста</h3>
+    <ul>
+      <li><b>Служебная разметка чат-интерфейса.</b> <code>data-message-author-role</code>, <code>data-message-model-slug="gpt-4o"</code>, <code>font-claude-response-body</code>, <code>dark:prose-invert</code> — у 216 товаров из 250 проверенных.</li>
+      <li><b>Дубли характеристик.</b> Состав, страна, категория веса теперь только в блоке спецификации.</li>
+      <li><b>Повторы по каталогу.</b> «For machine knitting, finer strand combinations are equally possible» — дословно у 98 товаров из 139. Такое выносится в общий блок «о бобинной пряже» и линкуется.</li>
+      <li><b>Превосходные степени без доказательства.</b> «incomparably softer than any mohair», «impossibly soft», «two of the finest natural fibers in the world».</li>
+      <li><b>Псевдозаголовки.</b> <code>&lt;p&gt;&lt;strong&gt;Fiber Content&lt;/strong&gt;&lt;/p&gt;</code> становятся настоящими H3.</li>
+    </ul>
+
+    <h3>6. Правила текста</h3>
+    <ul>
+      <li>Абзац — не больше 3 предложений. Строка — не длиннее 65 знаков.</li>
+      <li>Кегль 17px, интерлиньяж 1.6. Аудитория — вязальщицы от 50 лет.</li>
+      <li>Каждое сокращение расшифровано рядом: <code>68WS 32Se</code> → 68% cashmere, 32% silk. <code>CYC #0</code> → 800–1400 m per 100 g.</li>
+      <li>Уход — списком с галочками и крестиками, а не семью одинаковыми абзацами.</li>
+      <li>Уникального текста на товар — 120–150 слов. Всё общее живёт в одном месте и линкуется.</li>
+      <li>Заголовки формулируются под вопрос покупательницы: «How much yarn you need», а не «Project Yardage Estimates».</li>
+    </ul>
+
+    <h3>7. Микроразметка</h3>
+    <p>Таблица спецификации даёт готовые поля для JSON-LD. Добавить в <code>Product</code>:</p>
+    <ul>
+      <li><code>material</code> — из поля состава.</li>
+      <li><code>additionalProperty</code> — метраж, категория веса, страна, номер пряжи, плотность.</li>
+      <li><code>BreadcrumbList</code> — крошки на странице есть, разметки нет.</li>
+      <li><code>hasMerchantReturnPolicy</code> — возврата нет, это надо объявить явно.</li>
+      <li>Убрать <code>gtin: 41985860</code> — контрольная цифра GTIN-8 не сходится, это внутренний штрихкод.</li>
+      <li>Развести цену: в разметке <code>0.32</code> за грамм, на странице крупно <code>$32.00</code> за 100 г.</li>
+    </ul>
+  </section>
 
   <h2 class="block-title">Customer Reviews</h2>
   <div class="reviews">Be the first to write a review</div>
@@ -627,25 +688,18 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
 </footer>
 
 <script>
-// ---- переключатель «сейчас / новая версия» ------------------------------
-var btnNow = document.getElementById('btn-now');
-var btnNew = document.getElementById('btn-new');
-var secNow = document.getElementById('desc-now');
-var secNew = document.getElementById('desc-new');
-var note   = document.getElementById('demo-note');
-function show(which){
-  var isNew = which === 'new';
-  secNew.hidden = !isNew; secNow.hidden = isNew;
-  btnNew.setAttribute('aria-pressed', String(isNew));
-  btnNow.setAttribute('aria-pressed', String(!isNew));
-  document.body.classList.toggle('mode-new', isNew);
-  document.body.classList.toggle('mode-now', !isNew);
-  note.textContent = isNew
-    ? 'Описание на всю ширину, характеристики — из полей Shopify.'
-    : 'Описание в колонке 555 px под фото, 36 абзацев подряд.';
+// ---- вкладки «Карточка / Структура» ------------------------------------
+var tabPage = document.getElementById('tab-page');
+var tabDoc  = document.getElementById('tab-doc');
+function showTab(which){
+  var isDoc = which === 'doc';
+  document.body.classList.toggle('view-doc', isDoc);
+  tabDoc.setAttribute('aria-pressed', String(isDoc));
+  tabPage.setAttribute('aria-pressed', String(!isDoc));
+  window.scrollTo(0, 0);
 }
-btnNow.addEventListener('click', function(){ show('now'); });
-btnNew.addEventListener('click', function(){ show('new'); });
+tabPage.addEventListener('click', function(){ showTab('page'); });
+tabDoc.addEventListener('click', function(){ showTab('doc'); });
 
 // ---- счётчики граммов и бобин -------------------------------------------
 var PRICE_PER_GRAM = 0.32, M_PER_100G = 1300, YDS_PER_100G = 1422, CONE_FEE = 0.50;
