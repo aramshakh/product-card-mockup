@@ -27,7 +27,7 @@ body{
   font-size:15.6px; font-weight:300; line-height:1.4;
 }
 a{color:inherit}
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 .page-width{max-width:var(--page);margin:0 auto;padding:0 20px}
 
 /* ---------- демо-панель (её на реальном сайте нет) ---------- */
@@ -66,7 +66,7 @@ img{max-width:100%;display:block}
 /* ---------- товар ---------- */
 .product{display:grid;grid-template-columns:minmax(0,555px) 387px;gap:48px;
   justify-content:center;align-items:start}
-.product__right{position:sticky;top:56px}
+.product__left{position:sticky;top:56px}
 .gallery-wrap{position:relative}
 .variant-badge{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,.92);
   border-radius:3px;padding:5px 10px;font-size:12px;color:var(--ink)}
@@ -135,6 +135,15 @@ h1{font-size:18px;font-weight:600;line-height:1.15;letter-spacing:-.36px;color:v
 .cf-dont li:before{content:"✕";color:#a3736a}
 .cf-related{margin-top:20px;font-size:14px;color:#6b5a54}
 .cf-related a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+
+.facts-strip{display:grid;grid-template-columns:repeat(4,1fr);margin:34px 0 0;
+  background:#fff;border:1px solid var(--line-soft);border-radius:4px}
+.fact-card{padding:18px 20px;border-right:1px solid var(--line-soft)}
+.fact-card:last-child{border-right:0}
+.fact-card svg{margin-bottom:10px}
+.fact-card b{display:block;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:5px}
+.fact-card p{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.fact-card a{text-decoration:underline;text-underline-offset:2px}
 
 /* ---------- вкладка «Структура» ---------- */
 #doc{display:none;padding:34px 0 24px;max-width:900px}
@@ -247,7 +256,11 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
 
 @media (max-width:900px){
   .product{grid-template-columns:1fr;gap:24px}
-  .product__right{position:static}
+  .product__left{position:static}
+  .facts-strip{grid-template-columns:1fr 1fr}
+  .fact-card{border-bottom:1px solid var(--line-soft)}
+  .fact-card:nth-child(2n){border-right:0}
+  .fact-card:nth-last-child(-n+2){border-bottom:0}
   .cols2{grid-template-columns:1fr;gap:0}
   .calcs{grid-template-columns:1fr}
   .calc{border-right:0;border-bottom:1px solid var(--line-soft)}
@@ -258,6 +271,10 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
   .nav a{font-size:14px}
 }
 @media (max-width:560px){
+  .gallery{max-height:58vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .facts-strip{grid-template-columns:1fr}
+  .fact-card{border-right:0;border-bottom:1px solid var(--line-soft)}
+  .fact-card:last-child{border-bottom:0}
   .demo{padding:8px 16px;gap:10px;font-size:12px}
   .demo small,.demo .sp{display:none}
   .demo-toggle button{padding:5px 10px;font-size:12px}
@@ -367,31 +384,31 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
         </div>
         <a class="store-link" href="#">View store information</a>
       </div>
-
-      <div class="advantages">
-        <div class="adv">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
-          <div><b>Winding</b><p>A $0.50 charge is added for each cone used to wind this yarn. You may add extra cones for additional winding if needed.</p></div>
-        </div>
-        <div class="adv">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 19h16M7 19V9l5-4 5 4v10"/></svg>
-          <div><b>5970 in Stock Now</b><p>Yarn sold by gram (min 50g). Enter total grams — e.g. "100" for 100g. Unless stated otherwise.</p></div>
-        </div>
-        <div class="adv">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
-          <div><b>No returns</b><p>Due to the custom-wound nature of our yarn and storage requirements, all sales are final. We do n… <span class="more">Read more</span></p></div>
-        </div>
-      </div>
-
-      <h2 class="limit-title">Limit purchases</h2>
-      <table class="custom-limit-table">
-        <tbody>
-          <tr><th>Min (g)</th><th>Max (g)</th></tr>
-          <tr><td>50</td><td>5970</td></tr>
-        </tbody>
-      </table>
     </div>
   </div>
+  <div class="facts-strip">
+    <div class="fact-card">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 19h16M7 19V9l5-4 5 4v10"/></svg>
+      <b>5970 g in stock</b>
+      <p>Sold by the gram, minimum 50 g. Enter total grams — “100” means 100 g.</p>
+    </div>
+    <div class="fact-card">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+      <b>Wound to order</b>
+      <p>$0.50 per cone. Add extra cones if you want the yarn split between them.</p>
+    </div>
+    <div class="fact-card">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+      <b>No returns</b>
+      <p>Yarn is wound for you, so all sales are final. <a href="#">Read more</a></p>
+    </div>
+    <div class="fact-card">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      <b>Order limits</b>
+      <p>Minimum 50 g · maximum 5970 g, which is all that is left on this cone.</p>
+    </div>
+  </div>
+
   <section class="desc-full" id="desc-new">
     <h2>About this yarn</h2>
     <p class="sub">Arc 13000 by Vimar · sold by the gram, wound to order</p>
