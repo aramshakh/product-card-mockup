@@ -10,14 +10,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ==========================================================================
-   Макет карточки товара Cone & Fiber.
-   Все цвета, шрифты и размеры сняты с живой карточки coneandfiber.com
-   29.08.2026. Дизайн не менялся — меняется только структура описания.
+   Cone & Fiber — карточка товара.
+   Токены сняты с живой карточки coneandfiber.com (тема Stockmart).
+   Шкала кегля в rem: масштабирование текста в браузере работает.
+   Магазин светлый, тёмной темы нет намеренно.
    ========================================================================== */
 :root{
-  --bg:#f7f7f7; --ink:#36231e; --ink-2:#2e1f1a; --muted:#8a716b; --muted-2:#6d5750;
+  /* поверхности */
+  --bg:#f7f7f7; --surface:#fff; --surface-2:#fbfbfb; --head:#f5f5f5;
+  /* текст: --muted проходит AA (6.26:1), --muted-soft только для крупного и рамок */
+  --ink:#36231e; --ink-2:#2e1f1a; --muted:#6d5750; --muted-soft:#8a716b;
+  /* линии и акценты */
   --line:#ddd; --line-soft:#e8e4e2; --pink:#ded4d3; --pink-line:#c2a49a;
-  --page:1000px; --col:555px;
+  /* действия */
+  --cta:#36231e; --cta-ink:#fff; --cta-hover:#4a332c;
+  /* шкала кегля */
+  --fs-11:0.6875rem; --fs-12:0.75rem; --fs-13:0.8125rem; --fs-14:0.875rem;
+  --fs-15:0.9375rem; --fs-16:1rem; --fs-17:1.0625rem; --fs-18:1.125rem;
+  --fs-20:1.25rem; --fs-24:1.5rem; --fs-30:1.875rem;
+  /* ритм */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px;
+  --sp-6:24px; --sp-8:32px; --sp-10:40px; --sp-14:56px;
+  --radius:4px;
+  /* слои */
+  --z-sticky:10; --z-bar:20; --z-topbar:30;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --page:1000px; --col-buy:387px;
 }
 *{box-sizing:border-box}
 [hidden]{display:none !important}
@@ -25,314 +43,339 @@ html{font-size:16px}
 body{
   margin:0; background:var(--bg); color:var(--ink-2);
   font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-  font-size:15.6px; font-weight:300; line-height:1.4;
+  font-size:var(--fs-15); font-weight:300; line-height:1.5;
 }
 a{color:inherit}
 img{max-width:100%;height:auto;display:block}
-.page-width{max-width:var(--page);margin:0 auto;padding:0 20px}
+.page-width{max-width:var(--page);margin:0 auto;padding:0 var(--sp-5)}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
-/* ---------- демо-панель (её на реальном сайте нет) ---------- */
-.demo{position:sticky;top:0;z-index:99;background:#2e2724;color:#efe7e2;
-  padding:7px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px}
+/* ---------- состояния: одно место на весь документ ---------- */
+:where(a,button,input,select,summary):focus-visible{
+  outline:2px solid var(--ink); outline-offset:2px; border-radius:2px;
+}
+button,input,select{font-family:inherit}
+button:not(:disabled){cursor:pointer}
+:disabled{opacity:.4;cursor:not-allowed}
+.btn,.pill,.thumb,.stepper button,.demo-toggle button,.f-form button{
+  transition:background-color .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease);
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- панель вкладок ---------- */
+.demo{position:sticky;top:0;z-index:var(--z-topbar);background:#2e2724;color:#efe7e2;
+  padding:var(--sp-2) var(--sp-5);display:flex;align-items:center;gap:var(--sp-4);flex-wrap:wrap;font-size:var(--fs-13)}
 .demo b{font-weight:600;color:#fff}
 .demo .sp{flex:1}
 .demo-toggle{display:flex;border:1px solid #5a4d47;border-radius:99px;overflow:hidden}
-.demo-toggle button{appearance:none;border:0;background:transparent;color:#cbbcb5;
-  font:inherit;font-size:12.5px;padding:6px 14px;cursor:pointer}
-.demo-toggle button[aria-pressed=true]{background:#efe7e2;color:#2e2724;font-weight:500}
-.demo small{color:#a8968f;font-size:12px}
+.demo-toggle button{border:0;background:transparent;color:#cbbcb5;font:inherit;font-size:var(--fs-13);
+  min-height:44px;padding:0 var(--sp-4)}
+.demo-toggle button:hover{background:#3d3430;color:#efe7e2}
+.demo-toggle button[aria-selected=true]{background:#efe7e2;color:#2e2724;font-weight:500}
+.demo small{color:#a8968f;font-size:var(--fs-12)}
 
 /* ---------- шапка ---------- */
-.header{background:var(--bg);padding:14px 0 0}
-.header__top{display:flex;align-items:center;gap:16px}
-.header__logo img{width:150px;height:auto}
-.menu-btn{display:flex;align-items:center;gap:8px;border:2px solid var(--pink-line);
-  background:#fff;border-radius:4px;height:45px;padding:0 16px;font-size:14px;color:var(--ink);cursor:pointer}
+.header{background:var(--bg);padding:var(--sp-4) 0 0}
+.header__top{display:flex;align-items:center;gap:var(--sp-4)}
+.header__logo img{width:150px}
+.menu-btn{display:flex;align-items:center;gap:var(--sp-2);border:2px solid var(--pink-line);
+  background:var(--surface);border-radius:var(--radius);min-height:45px;padding:0 var(--sp-4);
+  font-size:var(--fs-14);color:var(--ink)}
+.menu-btn:hover{background:var(--pink)}
 .menu-btn i{width:14px;height:2px;background:var(--ink);box-shadow:0 -5px 0 var(--ink),0 5px 0 var(--ink);display:block}
-.search{flex:1;display:flex;align-items:center;background:#fff;border:2px solid var(--pink-line);
-  border-radius:4px;height:45px;padding:0 14px;gap:10px}
-.search input{border:0;outline:0;flex:1;font:inherit;font-size:15px;background:transparent}
-.search input::placeholder{color:#a99a94}
-.header__icons{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--ink)}
-.badge{position:relative;display:inline-flex}
-.badge span{position:absolute;top:-6px;right:-8px;background:var(--pink);color:var(--ink);
-  border-radius:99px;font-size:10px;line-height:1;padding:3px 5px}
-.nav{display:flex;flex-wrap:wrap;gap:8px 22px;padding:16px 0 12px}
-.nav a{font-size:16px;font-weight:500;color:var(--ink);text-decoration:none}
-.nav a.has:after{content:"⌄";font-size:13px;margin-left:4px;position:relative;top:-2px}
-.breadcrumbs{font-size:13px;padding:6px 0 18px;color:var(--ink)}
-.breadcrumbs a{color:#3a2822;text-decoration:underline;text-underline-offset:2px}
-.breadcrumbs span{color:var(--muted-2)}
+.search{flex:1;display:flex;align-items:center;background:var(--surface);border:2px solid var(--pink-line);
+  border-radius:var(--radius);min-height:45px;padding:0 var(--sp-3);gap:var(--sp-2)}
+.search:focus-within{border-color:var(--ink)}
+.search input{border:0;flex:1;height:41px;font:inherit;font-size:var(--fs-15);background:transparent;min-width:0}
+.search input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.search input::placeholder{color:var(--muted)}
+.header__icons{display:flex;align-items:center;gap:var(--sp-3);font-size:var(--fs-13);color:var(--ink);flex:0 0 auto}
+.icon-btn{background:none;border:0;padding:6px;display:flex;align-items:center;gap:4px;color:inherit;font-size:var(--fs-13)}
+.icon-btn:hover{color:var(--muted)}
+.badge{position:relative;display:inline-flex;padding:6px 14px 6px 6px}
+.badge em{position:absolute;top:0;right:0;background:var(--pink);color:var(--ink);
+  border-radius:99px;font-size:10px;font-style:normal;line-height:1;padding:3px 5px}
+.nav{display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-6);padding:var(--sp-4) 0 var(--sp-3)}
+.nav a{font-size:var(--fs-16);font-weight:500;color:var(--ink);text-decoration:none;padding:2px 0}
+.nav a:hover{color:var(--muted)}
+.nav a.has:after{content:"⌄";font-size:var(--fs-13);margin-left:4px;position:relative;top:-2px}
+.breadcrumbs{font-size:var(--fs-13);padding:var(--sp-2) 0 var(--sp-5);color:var(--muted)}
+.breadcrumbs a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.breadcrumbs a:hover{color:var(--muted)}
 
 /* ---------- товар ---------- */
-.product{display:grid;grid-template-columns:minmax(0,555px) 387px;gap:48px;
+.product{display:grid;grid-template-columns:minmax(0,555px) var(--col-buy);gap:48px;
   justify-content:center;align-items:start}
-.product__left{position:sticky;top:56px}
 .gallery-wrap{position:relative}
-.variant-badge{position:absolute;right:12px;bottom:12px;background:rgba(255,255,255,.92);
-  border-radius:3px;padding:5px 10px;font-size:12px;color:var(--ink)}
-.gallery{background:#fff;border:1px solid var(--line-soft);border-radius:4px;overflow:hidden}
-.vendor{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
-  display:flex;gap:10px;align-items:center;margin-bottom:5px}
-.vendor a{color:var(--ink);text-transform:none;letter-spacing:0;font-size:13px;text-decoration:none}
-h1{font-size:18px;font-weight:600;line-height:1.15;letter-spacing:-.36px;color:var(--ink);margin:0 0 10px}
-.price-row{display:flex;align-items:baseline;gap:8px}
-.price{font-size:24px;font-weight:500;color:var(--ink)}
-.price-unit{font-size:14px;color:var(--ink-2)}
-.price-sub{font-size:13px;color:var(--muted-2);margin-top:3px}
-.price-ship{font-size:13px;color:var(--muted-2);margin-top:2px}
-.price-ship u{text-underline-offset:2px}
-.shoppay{font-size:12px;letter-spacing:.02em;color:var(--ink);margin:8px 0 10px}
-.shoppay b{background:#5a31f4;color:#fff;border-radius:3px;padding:1px 6px;font-weight:600;font-size:11px}
-.opt-label{font-size:13px;color:var(--ink);margin-bottom:5px}
-.swatch{width:44px;height:44px;border:1px solid var(--ink);border-radius:2px;padding:3px;background:#fff}
+.gallery{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden}
+.variant-badge{position:absolute;right:var(--sp-3);bottom:var(--sp-3);background:rgba(255,255,255,.92);
+  border-radius:3px;padding:5px 10px;font-size:var(--fs-12);color:var(--ink)}
+
+/* правая колонка: липкая, чтобы кнопка не уезжала во время чтения */
+.product__right{position:sticky;top:var(--sp-14);align-self:start;z-index:var(--z-sticky)}
+.vendor{font-size:var(--fs-11);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  display:flex;gap:10px;align-items:center;margin-bottom:var(--sp-1)}
+.vendor a{color:var(--ink);text-transform:none;letter-spacing:0;font-size:var(--fs-13);text-decoration:underline;text-underline-offset:2px}
+h1{font-size:var(--fs-20);font-weight:600;line-height:1.2;letter-spacing:-.01em;color:var(--ink);
+  margin:0 0 var(--sp-1);text-wrap:balance}
+.h1-spec{font-size:var(--fs-13);color:var(--muted);margin:0 0 var(--sp-3);line-height:1.45}
+.price-lead{display:flex;align-items:baseline;gap:var(--sp-2);flex-wrap:wrap}
+.price{font-size:var(--fs-18);font-weight:500;color:var(--ink)}
+.price-unit{font-size:var(--fs-13);color:var(--muted)}
+.price-ship{font-size:var(--fs-13);color:var(--muted);margin-top:var(--sp-1)}
+.shoppay{font-size:var(--fs-12);color:var(--muted);margin:var(--sp-2) 0 var(--sp-3)}
+.shoppay b{background:#5a31f4;color:#fff;border-radius:3px;padding:1px 6px;font-weight:600;font-size:var(--fs-11)}
+.opt-label{font-size:var(--fs-13);color:var(--ink);margin-bottom:var(--sp-1)}
+.swatch{width:44px;height:44px;border:1px solid var(--ink);border-radius:2px;padding:3px;background:var(--surface)}
 .swatch i{display:block;width:100%;height:100%;background:#1c1a19;border-radius:1px}
-.facts{margin:20px 0;display:grid;gap:16px}
-.fact{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:start}
-.fact svg{margin-top:2px}
-.fact b{display:block;font-weight:500;font-size:14px;color:var(--ink);margin-bottom:2px}
-.fact p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.45}
-.buy{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;align-items:start;margin-top:14px}
-.buy label{font-size:13px;color:var(--ink);display:block;margin-bottom:6px}
-.stepper{display:flex;align-items:center;border:1px solid var(--ink);border-radius:4px;height:48px;width:150px}
-.stepper button{appearance:none;border:0;background:transparent;font:inherit;font-size:18px;
-  width:44px;height:100%;cursor:pointer;color:var(--ink)}
-.stepper input{border:0;outline:0;width:100%;text-align:center;font:inherit;font-size:16px;background:transparent}
-.stepper .unit{font-size:13px;color:var(--muted-2);padding-right:6px}
-.total b{display:block;font-size:13px;font-weight:400;color:var(--ink);margin-bottom:6px}
-.total .sum{font-size:24px;font-weight:500;color:var(--ink)}
-.total .meta{font-size:13px;color:var(--muted-2);margin-top:4px}
-.hint{font-size:12.5px;color:var(--muted-2);line-height:1.4}
-.btn{display:block;width:100%;text-align:center;background:var(--pink);border:2px solid var(--pink);
-  border-radius:4px;color:var(--ink);font-size:13px;font-weight:400;padding:10px 30px;cursor:pointer;font-family:inherit}
-.btn--ghost{background:transparent;border-color:var(--pink-line)}
-.btn--wish{background:#665353;border-color:#665353;color:#fff}
-.buy-actions{grid-column:1/-1;display:grid;gap:8px;margin-top:2px}
-.store-link{grid-column:1/-1;font-size:13px;color:var(--muted-2);text-decoration:underline;text-underline-offset:2px;margin-top:2px}
 
-/* ---------- описание: новая версия (product-specs.css) ---------- */
-.cf-product{font-size:17px;font-weight:300;line-height:1.6;color:#36231e}
-.cf-product h3{margin:38px 0 14px;font-size:20px;font-weight:600;line-height:1.25;letter-spacing:-.3px;color:#36231e}
-.cf-product>*:first-child{margin-top:0}
-/* строка не длиннее ~65 знаков — иначе глаз теряет начало следующей */
-.cf-product p{margin:0 0 16px;font-size:17px;font-weight:300;line-height:1.6;max-width:62ch}
-.cf-lead{font-size:19px;line-height:1.55;max-width:60ch}
-.cf-product strong{font-weight:400}
-.cf-pricing-note{margin-bottom:20px}
-.cf-table-wrap{width:100%;margin:0 0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.cf-table{width:100%;border:1px solid #ddd;border-collapse:collapse;font-size:16px;font-weight:300;line-height:1.45;text-align:left;color:#2e1f1a}
-.cf-table caption{caption-side:top;padding:0 0 8px;font-size:14px;font-weight:300;line-height:1.3;color:#8a7a74;text-align:left;position:sticky;left:0}
-.cf-table th,.cf-table td{padding:12px 14px;border:1px solid #ddd;vertical-align:top}
-.cf-table th{font-weight:600;background:#f5f5f5}
-.cf-table thead th{line-height:1.2}
-.cf-specs th[scope=row]{width:40%;font-weight:400;background:#fbfbfb}
+.keyfacts{margin:var(--sp-4) 0 0;padding:var(--sp-3) 0 0;border-top:1px solid var(--line-soft);
+  display:grid;gap:var(--sp-2)}
+.keyfacts > div{display:grid;grid-template-columns:minmax(120px,140px) 1fr;gap:var(--sp-3);align-items:baseline}
+.keyfacts dt{font-size:var(--fs-13);color:var(--muted);margin:0}
+.keyfacts dd{font-size:var(--fs-15);font-weight:400;color:var(--ink);margin:0;line-height:1.45}
+
+.buy{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3) var(--sp-5);align-items:start;margin-top:var(--sp-4)}
+.buy label{font-size:var(--fs-13);color:var(--ink);display:block;margin-bottom:var(--sp-1)}
+.stepper{display:flex;align-items:center;border:1px solid var(--ink);border-radius:var(--radius);
+  height:48px;width:100%;max-width:180px;background:var(--surface)}
+.stepper button{border:0;background:transparent;font-size:var(--fs-18);min-width:44px;height:100%;color:var(--ink);flex:0 0 auto}
+.stepper button:hover:not(:disabled){background:var(--pink)}
+.stepper input{border:0;width:100%;height:100%;min-width:0;text-align:center;font:inherit;
+  font-size:var(--fs-16);background:transparent;color:var(--ink)}
+.stepper input:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+.stepper .unit{font-size:var(--fs-13);color:var(--muted);padding-right:var(--sp-1)}
+.total b{display:block;font-size:var(--fs-13);font-weight:400;color:var(--muted);margin-bottom:var(--sp-1)}
+.total .sum{font-size:var(--fs-30);font-weight:500;color:var(--ink);line-height:1.1}
+.total .meta{font-size:var(--fs-13);color:var(--muted);margin-top:var(--sp-1)}
+.hint{font-size:var(--fs-12);color:var(--muted);line-height:1.45;margin:0}
+.notice{grid-column:1/-1;font-size:var(--fs-13);line-height:1.45;color:var(--ink);
+  background:var(--pink);border-radius:var(--radius);padding:10px var(--sp-3);margin:0}
+.notice:empty{display:none}
+.btn{display:flex;align-items:center;justify-content:center;gap:var(--sp-2);width:100%;min-height:48px;
+  text-align:center;border-radius:var(--radius);font-size:var(--fs-15);font-weight:500;
+  padding:10px var(--sp-6);border:2px solid transparent}
+.btn--primary{background:var(--cta);border-color:var(--cta);color:var(--cta-ink)}
+.btn--primary:hover{background:var(--cta-hover);border-color:var(--cta-hover)}
+.btn--ghost{background:transparent;border-color:var(--pink-line);color:var(--ink);min-height:44px;font-weight:400}
+.btn--ghost:hover{background:var(--pink)}
+.buy-actions{grid-column:1/-1;display:grid;gap:var(--sp-2);margin-top:var(--sp-1)}
+.store-link{grid-column:1/-1;font-size:var(--fs-13);color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+.store-link:hover{color:var(--ink)}
+
+/* мобильная панель покупки */
+.buybar{position:fixed;left:0;right:0;bottom:0;z-index:var(--z-bar);display:none;
+  align-items:center;gap:var(--sp-3);padding:10px var(--sp-4);
+  background:rgba(247,247,247,.97);border-top:1px solid var(--line)}
+.buybar .sum{font-size:var(--fs-18);font-weight:500;color:var(--ink);line-height:1.1}
+.buybar .meta{font-size:var(--fs-12);color:var(--muted)}
+.buybar .btn{width:auto;flex:0 0 auto;padding:10px var(--sp-5)}
+
+/* ---------- описание ---------- */
+.desc-full{margin:var(--sp-14) 0 0;padding-top:var(--sp-8);border-top:1px solid var(--line-soft)}
+.desc-full > h2{font-size:var(--fs-24);font-weight:600;letter-spacing:-.01em;color:var(--ink);margin:0 0 var(--sp-1)}
+.desc-full .sub{font-size:var(--fs-15);color:var(--muted);margin:0 0 var(--sp-8)}
+.cf-product{font-size:var(--fs-17);font-weight:300;line-height:1.6;color:var(--ink)}
+.cf-product h3{margin:var(--sp-10) 0 var(--sp-3);font-size:var(--fs-20);font-weight:600;line-height:1.25;color:var(--ink)}
+.cf-product > *:first-child{margin-top:0}
+.cf-product p{margin:0 0 var(--sp-4);max-width:62ch;text-wrap:pretty}
+.cf-lead{font-size:var(--fs-18);max-width:58ch}
+.cf-product strong{font-weight:500}
+
+.spec{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:0 0 var(--sp-6)}
+.spec-row{display:grid;grid-template-columns:minmax(190px,250px) 1fr;border-bottom:1px solid var(--line)}
+.spec-row:last-child{border-bottom:0}
+.spec-row:nth-child(odd){background:var(--surface-2)}
+.spec-row dt{padding:var(--sp-3) var(--sp-4);font-size:var(--fs-15);font-weight:400;color:var(--muted);
+  border-right:1px solid var(--line);margin:0}
+.spec-row dd{padding:var(--sp-3) var(--sp-4);font-size:var(--fs-16);color:var(--ink-2);margin:0;line-height:1.5}
+.spec-row dd small{display:block;font-size:var(--fs-14);font-weight:400;color:var(--muted);margin-top:3px;line-height:1.45}
+
+.cf-table-wrap{width:100%;margin:0 0 var(--sp-5);overflow-x:auto}
+.cf-table{width:100%;border:1px solid var(--line);border-collapse:collapse;font-size:var(--fs-16);
+  font-weight:300;line-height:1.45;text-align:left;color:var(--ink-2)}
+.cf-table caption{caption-side:top;padding:0 0 var(--sp-2);font-size:var(--fs-14);font-weight:400;
+  color:var(--muted);text-align:left}
+.cf-table th,.cf-table td{padding:var(--sp-3) var(--sp-4);border:1px solid var(--line);vertical-align:top}
+.cf-table th{font-weight:600;background:var(--head)}
 .cf-strands th[scope=row]{white-space:nowrap}
-.cf-yardage th[scope=rowgroup]{white-space:nowrap;vertical-align:top}
-.cf-care,.cf-notes{margin:0 0 22px;padding:0;list-style:none;max-width:62ch}
-.cf-care li,.cf-notes li{margin-bottom:12px;font-size:17px;line-height:1.55;
+.cf-yardage tbody tr.group-start th,.cf-yardage tbody tr.group-start td{border-top:2px solid var(--muted-soft)}
+.cf-yardage th[scope=rowgroup]{white-space:nowrap;vertical-align:top;background:var(--surface-2)}
+.use-amount{background:transparent;border:1px solid var(--pink-line);border-radius:var(--radius);
+  min-height:44px;padding:0 var(--sp-3);font-size:var(--fs-14);color:var(--ink);white-space:nowrap}
+.use-amount:hover{background:var(--pink)}
+
+.cf-care,.cf-notes{margin:0 0 var(--sp-6);padding:0;list-style:none;max-width:62ch}
+.cf-care li,.cf-notes li{margin-bottom:var(--sp-3);font-size:var(--fs-17);line-height:1.55;
   padding-left:30px;position:relative}
-.cf-care li:before{content:"✓";position:absolute;left:0;top:0;color:#8a716b;font-size:16px}
-.cf-notes li:before{content:"•";position:absolute;left:8px;top:-1px;color:#8a716b;font-size:18px}
-.cf-dont li:before{content:"✕";color:#a3736a}
-.cf-related{margin-top:20px;font-size:14px;color:#6b5a54}
-.cf-related a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.cf-care li:before{content:"✓";position:absolute;left:0;top:0;color:var(--muted)}
+.cf-notes li:before{content:"•";position:absolute;left:8px;top:-1px;color:var(--muted);font-size:var(--fs-18)}
+.cf-dont li:before{content:"✕";color:#9c5f52}
+.cf-related{margin-top:var(--sp-5);font-size:var(--fs-16);color:var(--muted)}
+.cf-related a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 
-.thumbs{display:flex;gap:10px;margin-top:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
-.thumb{flex:0 0 auto;width:84px;height:84px;padding:0;border:1px solid var(--line-soft);border-radius:4px;
-  background:#fff;cursor:pointer;overflow:hidden;display:block}
-.thumb.is-active{border-color:var(--ink);border-width:2px}
-.thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-  background:repeating-linear-gradient(45deg,#f4f1f0,#f4f1f0 8px,#efeae8 8px,#efeae8 16px);
-  color:var(--muted);text-align:center}
-.ph i{font-style:normal;font-size:11px;letter-spacing:.02em}
-.ph--main{aspect-ratio:1/1;gap:14px}
-.ph--main span{font-size:15px;color:var(--muted-2)}
-
-.facts-strip{display:grid;grid-template-columns:repeat(4,1fr);margin:34px 0 0;
-  background:#fff;border:1px solid var(--line-soft);border-radius:4px}
-.fact-card{padding:18px 20px;border-right:1px solid var(--line-soft)}
+/* ---------- полоса фактов ---------- */
+.facts-strip{display:grid;grid-template-columns:repeat(3,1fr);margin:var(--sp-8) 0 0;
+  background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius)}
+.fact-card{padding:var(--sp-5);border-right:1px solid var(--line-soft)}
 .fact-card:last-child{border-right:0}
-.fact-card svg{margin-bottom:10px}
-.fact-card b{display:block;font-size:14px;font-weight:600;color:var(--ink);margin-bottom:5px}
-.fact-card p{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.fact-card b{display:block;font-size:var(--fs-15);font-weight:600;color:var(--ink);margin-bottom:var(--sp-1)}
+.fact-card p{margin:0;font-size:var(--fs-14);line-height:1.55;color:var(--ink-2)}
 .fact-card a{text-decoration:underline;text-underline-offset:2px}
 
-/* ---------- вкладка «Структура» ---------- */
-#doc{display:none;padding:34px 0 24px;max-width:900px}
-.view-doc #doc{display:block}
-.view-doc .header,.view-doc footer,.view-doc main > *:not(#doc){display:none}
-#doc h2{font-size:24px;font-weight:600;letter-spacing:-.4px;color:var(--ink);margin:0 0 8px}
-#doc h3{font-size:18px;font-weight:600;color:var(--ink);margin:38px 0 12px}
-#doc p{font-size:16px;line-height:1.6;max-width:70ch;margin:0 0 14px}
-#doc .lead{font-size:17px;color:var(--muted-2);margin-bottom:30px}
-#doc table{width:100%;border:1px solid var(--line);border-collapse:collapse;font-size:15px;margin:0 0 18px}
-#doc th,#doc td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;line-height:1.5}
-#doc thead th{background:#f5f5f5;font-weight:600}
-#doc tbody th{background:#fbfbfb;font-weight:400;color:var(--muted-2)}
-#doc code{background:#efeae8;border-radius:3px;padding:1px 5px;font-size:14px;
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
-#doc ul{margin:0 0 18px;padding-left:20px;max-width:70ch}
-#doc li{font-size:16px;line-height:1.6;margin-bottom:8px}
-#doc .ok{color:#3c6a4c}
-#doc .new{color:#8a5a4e}
-.tree{background:#fff;border:1px solid var(--line-soft);border-radius:4px;padding:18px 22px;margin:0 0 18px;
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;line-height:1.95}
-.tree div{white-space:nowrap;overflow-x:auto}
-.tree .l1{font-weight:600;color:var(--ink)}
-.tree .l2{padding-left:24px;font-weight:600}
-.tree .l3{padding-left:48px}
-.tree em{color:var(--muted);font-family:Inter,sans-serif;font-style:normal;font-size:13px}
-tr.new-field td,tr.new-field th{background:#fdf6f4}
-
-/* ---------- описание на всю ширину ---------- */
-.desc-full{margin:56px 0 0;padding-top:34px;border-top:1px solid var(--line-soft)}
-.desc-full > h2{font-size:24px;font-weight:600;letter-spacing:-.4px;color:var(--ink);margin:0 0 6px}
-.desc-full .sub{font-size:15px;color:var(--muted);margin:0 0 30px}
-.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 56px}
-.cols2 > *{min-width:0}
-
-/* блок спецификации из метаполей — единственный источник характеристик */
-.spec{border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:0 0 12px}
-.spec-row{display:grid;grid-template-columns:minmax(180px,240px) 1fr;border-bottom:1px solid var(--line)}
-.spec-row:last-child{border-bottom:0}
-.spec-row:nth-child(odd){background:#fbfbfb}
-.spec-row dt{padding:12px 14px;font-size:15px;font-weight:400;color:var(--muted-2);
-  border-right:1px solid var(--line);margin:0}
-.spec-row dd{padding:12px 14px;font-size:16px;color:var(--ink-2);margin:0;line-height:1.5}
-.spec-row dd small{display:block;font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.45}
-.from-meta{display:inline-block;font-size:11px;letter-spacing:.03em;text-transform:uppercase;
-  color:#6f8a72;background:#eaf2ea;border-radius:99px;padding:2px 8px;margin-left:8px;vertical-align:1px}
-
-
-/* иконочные факты в правой колонке (как в теме) */
-.advantages{margin:24px 0 0;padding-top:20px;border-top:1px solid var(--line-soft);display:grid;gap:14px}
-.adv{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start}
-.adv b{display:block;font-weight:500;font-size:14px;color:var(--ink);margin-bottom:2px}
-.adv p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.45}
-.adv .more{text-decoration:underline;text-underline-offset:2px;cursor:pointer}
-
-/* ---------- таблица лимита ---------- */
-.limit-title{font-size:16px;font-weight:600;letter-spacing:-.32px;color:var(--ink);margin:26px 0 10px}
-.custom-limit-table{width:100%;border:1px solid var(--line);border-collapse:collapse;font-size:15.6px}
-.custom-limit-table th,.custom-limit-table td{border:1px solid var(--line);padding:8px;text-align:left}
-.custom-limit-table th{background:#f5f5f5;font-weight:600}
-
 /* ---------- калькуляторы ---------- */
-.calcs-intro{font-size:16px;line-height:1.6;max-width:62ch;margin:0 0 18px;color:var(--ink-2)}
-.calcs{display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border:1px solid var(--line-soft);
-  border-radius:4px;margin:0}
-.calc{padding:20px 22px;border-right:1px solid var(--line-soft)}
+.calcs{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);
+  border:1px solid var(--line-soft);border-radius:var(--radius);margin:0}
+.calc{padding:var(--sp-5);border-right:1px solid var(--line-soft)}
 .calc:last-child{border-right:0}
-.calc h3{font-size:15px;font-weight:600;color:var(--ink);margin:0 0 12px}
-.calc p{font-size:13px;line-height:1.45;margin:0 0 6px;color:var(--ink-2)}
-.pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
-.pill{appearance:none;font:inherit;font-size:12.5px;background:#fff;border:1px solid #cfc6c3;
-  border-radius:4px;padding:6px 11px;cursor:pointer;color:var(--ink)}
+.calc h3{font-size:var(--fs-15);font-weight:600;color:var(--ink);margin:0 0 var(--sp-3)}
+.calc p{font-size:var(--fs-14);line-height:1.5;margin:0 0 var(--sp-2);color:var(--ink-2)}
+.calcs-intro{font-size:var(--fs-16);line-height:1.6;max-width:62ch;margin:0 0 var(--sp-4);color:var(--ink-2)}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:var(--sp-3)}
+.pill{font-size:var(--fs-13);background:var(--surface);border:1px solid #cfc6c3;border-radius:var(--radius);
+  min-height:44px;padding:0 var(--sp-3);color:var(--ink)}
+.pill:hover{background:var(--pink)}
 .pill[aria-pressed=true]{background:var(--pink);border-color:var(--pink-line);font-weight:500}
-.field{display:flex;gap:8px;margin:8px 0 10px}
-.field input,.field select{font:inherit;font-size:13px;border:1px solid #cfc6c3;border-radius:4px;
-  padding:8px 10px;background:#fff;color:var(--ink);min-width:0}
+.field{display:flex;gap:var(--sp-2);margin:var(--sp-2) 0 var(--sp-3)}
+.field input,.field select{font-size:var(--fs-14);border:1px solid #cfc6c3;border-radius:var(--radius);
+  min-height:44px;padding:0 10px;background:var(--surface);color:var(--ink);min-width:0}
 .field input{flex:1}
-.calc .note{font-size:11.5px;font-style:italic;color:var(--muted);line-height:1.45;margin-top:10px}
-.calc a{font-size:13px;color:var(--ink-2);text-decoration:underline;text-underline-offset:2px}
+.calc .note{font-size:var(--fs-12);color:var(--muted);line-height:1.5;margin-top:var(--sp-3)}
+.calc a{font-size:var(--fs-14);color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 
 /* ---------- отзывы, похожие ---------- */
-.block-title{font-size:18px;font-weight:600;letter-spacing:-.36px;color:var(--ink);margin:44px 0 14px}
-.reviews{background:#fff;border:1px solid var(--line-soft);border-radius:4px;padding:22px;font-size:14px;color:var(--muted-2)}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.card{background:#fff;border:1px solid var(--line-soft);border-radius:4px;overflow:hidden}
-.card .t{font-size:13px;line-height:1.35;padding:10px 12px 4px;color:var(--ink)}
-.card .p{font-size:13px;padding:0 12px 12px;color:var(--muted-2)}
+.block-title{font-size:var(--fs-24);font-weight:600;letter-spacing:-.01em;color:var(--ink);margin:var(--sp-14) 0 var(--sp-3)}
+.reviews{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);
+  padding:var(--sp-6);font-size:var(--fs-16);color:var(--muted);display:flex;
+  align-items:center;justify-content:space-between;gap:var(--sp-4);flex-wrap:wrap}
+.reviews .btn{width:auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--sp-5)}
+.card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden;
+  display:block;text-decoration:none}
+.card:hover{border-color:var(--pink-line)}
+.card .t{font-size:var(--fs-14);line-height:1.4;padding:10px var(--sp-3) var(--sp-1);color:var(--ink)}
+.card .p{font-size:var(--fs-14);padding:0 var(--sp-3) var(--sp-3);color:var(--muted)}
+
+/* ---------- вкладка «Структура» ---------- */
+#doc{display:none;padding:var(--sp-8) 0 var(--sp-6);max-width:900px}
+.view-doc #doc{display:block}
+.view-doc .header,.view-doc footer,.view-doc .buybar,.view-doc main > *:not(#doc){display:none}
+#doc h2{font-size:var(--fs-24);font-weight:600;color:var(--ink);margin:0 0 var(--sp-2)}
+#doc h3{font-size:var(--fs-18);font-weight:600;color:var(--ink);margin:var(--sp-10) 0 var(--sp-3)}
+#doc p{font-size:var(--fs-16);line-height:1.6;max-width:70ch;margin:0 0 var(--sp-3)}
+#doc .lead{font-size:var(--fs-17);color:var(--muted);margin-bottom:var(--sp-8)}
+#doc table{width:100%;border:1px solid var(--line);border-collapse:collapse;font-size:var(--fs-15);margin:0 0 var(--sp-4)}
+#doc th,#doc td{border:1px solid var(--line);padding:10px var(--sp-3);text-align:left;vertical-align:top;line-height:1.5}
+#doc thead th{background:var(--head);font-weight:600}
+#doc tbody th{background:var(--surface-2);font-weight:400;color:var(--muted)}
+#doc code{background:#efeae8;border-radius:3px;padding:1px 5px;font-size:var(--fs-14);
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+#doc ul{margin:0 0 var(--sp-4);padding-left:var(--sp-5);max-width:70ch}
+#doc li{font-size:var(--fs-16);line-height:1.6;margin-bottom:var(--sp-2)}
+#doc .ok{color:#3c6a4c}
+#doc .new{color:#8a5a4e}
+.tree{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);
+  padding:var(--sp-5);margin:0 0 var(--sp-4);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:var(--fs-14);line-height:1.95}
+.tree div{white-space:nowrap;overflow-x:auto}
+.tree .l1{font-weight:600;color:var(--ink)}
+.tree .l2{padding-left:var(--sp-6);font-weight:600}
+.tree .l3{padding-left:48px}
+.tree em{color:var(--muted);font-family:Inter,sans-serif;font-style:normal;font-size:var(--fs-13)}
+tr.new-field td,tr.new-field th{background:#fdf6f4}
 
 /* ---------- футер ---------- */
-footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
-.f-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:28px}
-.f-grid h4{font-size:15px;font-weight:500;color:#3f2d29;margin:0 0 10px}
-.f-grid a,.f-grid p{font-size:12px;color:#6d5750;text-decoration:none;line-height:1.9;margin:0}
-.f-copy{font-size:13px;color:#8a716b;margin-top:14px;line-height:1.6}
-.f-rule{border:0;border-top:1px solid rgba(63,45,41,.18);margin:26px 0}
-.f-sub{display:grid;grid-template-columns:1fr auto auto;gap:18px;align-items:center}
-.f-sub .lbl{font-size:14px;color:#3f2d29}
+footer{background:var(--pink);margin-top:var(--sp-14);padding:var(--sp-8) 0 var(--sp-6)}
+.f-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:var(--sp-6)}
+.f-grid h2{font-size:var(--fs-15);font-weight:500;color:#3f2d29;margin:0 0 10px}
+.f-grid a,.f-grid p{font-size:var(--fs-13);color:#5c4a44;text-decoration:none;line-height:1.9;margin:0}
+.f-grid a:hover{text-decoration:underline}
+.f-copy{font-size:var(--fs-13);color:#5c4a44;margin-top:var(--sp-3);line-height:1.6}
+.f-rule{border:0;border-top:1px solid rgba(63,45,41,.18);margin:var(--sp-6) 0}
+.f-sub{display:grid;grid-template-columns:1fr auto auto;gap:var(--sp-5);align-items:center}
+.f-sub .lbl{font-size:var(--fs-14);color:#3f2d29}
 .f-form{display:flex;gap:10px}
-.f-form input{border:1px solid #fff;background:#fff;border-radius:4px;padding:11px 14px;font:inherit;font-size:14px;min-width:190px}
-.f-form button{background:#fff;border:1px solid #fff;border-radius:4px;padding:11px 22px;font:inherit;font-size:14px;cursor:pointer}
+.f-form input{border:1px solid var(--surface);background:var(--surface);border-radius:var(--radius);
+  padding:11px var(--sp-3);font:inherit;font-size:var(--fs-14);min-width:190px}
+.f-form button{background:var(--surface);border:1px solid var(--surface);border-radius:var(--radius);
+  padding:11px var(--sp-5);font:inherit;font-size:var(--fs-14);min-height:44px}
+.f-form button:hover{background:#f0e9e7}
 .pay{display:flex;gap:5px;flex-wrap:wrap}
-.pay i{display:block;width:34px;height:22px;border-radius:3px;background:#fff;
-  border:1px solid rgba(0,0,0,.08);font-size:8px;font-style:normal;color:#555;
-  display:flex;align-items:center;justify-content:center;letter-spacing:-.02em}
-.social{display:flex;gap:10px;align-items:center;margin-top:18px}
-.social i{width:26px;height:26px;border-radius:99px;background:#fff;display:flex;align-items:center;
-  justify-content:center;font-style:normal;font-size:11px;color:#6d5750}
-.f-legal{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:26px}
-.f-legal a{font-size:12px;color:#6d5750;text-decoration:none}
+.pay i{width:34px;height:22px;border-radius:3px;background:var(--surface);
+  border:1px solid rgba(0,0,0,.08);font-size:8px;font-style:normal;color:#5c4a44;
+  display:flex;align-items:center;justify-content:center}
+.social{display:flex;gap:10px;align-items:center;margin-top:var(--sp-5)}
+.social a{width:32px;height:32px;border-radius:99px;background:var(--surface);display:flex;
+  align-items:center;justify-content:center;font-size:var(--fs-11);color:#5c4a44;text-decoration:none}
+.f-legal{display:flex;gap:var(--sp-5);justify-content:center;flex-wrap:wrap;margin-top:var(--sp-6)}
+.f-legal a{font-size:var(--fs-13);color:#5c4a44;text-decoration:none}
+.f-legal a:hover{text-decoration:underline}
 
+/* ---------- адаптив ---------- */
 @media (max-width:900px){
-  .product{grid-template-columns:1fr;gap:24px}
-  .product__left{position:static}
-  .facts-strip{grid-template-columns:1fr 1fr}
-  .fact-card{border-bottom:1px solid var(--line-soft)}
-  .fact-card:nth-child(2n){border-right:0}
-  .fact-card:nth-last-child(-n+2){border-bottom:0}
-  .cols2{grid-template-columns:1fr;gap:0}
-  .calcs{grid-template-columns:1fr}
-  .calc{border-right:0;border-bottom:1px solid var(--line-soft)}
-  .cards{grid-template-columns:repeat(2,1fr)}
+  .product{grid-template-columns:1fr;gap:var(--sp-6)}
+  .product__right{position:static}
+  .facts-strip,.calcs{grid-template-columns:1fr}
+  .fact-card,.calc{border-right:0;border-bottom:1px solid var(--line-soft)}
+  .fact-card:last-child,.calc:last-child{border-bottom:0}
   .f-grid{grid-template-columns:1fr 1fr}
   .f-sub{grid-template-columns:1fr}
-  .nav{gap:8px 14px}
-  .nav a{font-size:14px}
+  .buybar{display:flex}
+  body{padding-bottom:76px}
+  .nav{display:none}
 }
 @media (max-width:560px){
   .gallery{max-height:58vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
-  .thumb{width:68px;height:68px}
-  .facts-strip{grid-template-columns:1fr}
-  .fact-card{border-right:0;border-bottom:1px solid var(--line-soft)}
-  .fact-card:last-child{border-bottom:0}
-  .demo{padding:8px 16px;gap:10px;font-size:12px}
   .demo small,.demo .sp{display:none}
-  .demo-toggle button{padding:5px 10px;font-size:12px}
-  .header__top{flex-wrap:wrap}
-  .search{order:3;flex-basis:100%}
   .buy{grid-template-columns:1fr}
-  .cards{grid-template-columns:1fr}
   .f-grid{grid-template-columns:1fr}
-  .cf-table{font-size:14px}
-  .cf-table th,.cf-table td{padding:9px 10px}
+  .cf-table{font-size:var(--fs-14)}
+  .cf-table th,.cf-table td{padding:10px}
   .spec-row{grid-template-columns:1fr}
-  .spec-row dt{border-right:0;border-bottom:1px solid var(--line);padding-bottom:6px}
-  .desc-full > h2{font-size:21px}
+  .spec-row dt{border-right:0;border-bottom:1px solid var(--line);padding-bottom:var(--sp-1)}
+  .desc-full > h2,.block-title{font-size:var(--fs-20)}
+  .cf-product h3{font-size:var(--fs-18)}
 }
 </style>
 </head>
 <body>
+
 <div class="demo">
   <b>Cone &amp; Fiber</b> · новая карточка товара
   <div class="demo-toggle" role="tablist" aria-label="Что показать">
-    <button type="button" id="tab-page" role="tab" aria-pressed="true">Карточка</button>
-    <button type="button" id="tab-doc" role="tab" aria-pressed="false">Структура</button>
+    <button type="button" id="tab-page" role="tab" aria-selected="true" aria-controls="page-view">Карточка</button>
+    <button type="button" id="tab-doc" role="tab" aria-selected="false" aria-controls="doc">Структура</button>
   </div>
+  <span class="sp"></span>
+  <small>Arc 13000 · 68% кашемир, 32% шёлк</small>
 </div>
 
 <header class="header">
   <div class="page-width">
     <div class="header__top">
-      <a class="header__logo" href="#"><img src="{{LOGO}}" alt="Cone and Fiber Inc" width="150"></a>
+      <a class="header__logo" href="#"><img src="{{LOGO}}" alt="Cone and Fiber Inc" width="150" height="41"></a>
       <button class="menu-btn" type="button"><i></i> Menu</button>
       <div class="search">
-        <input type="search" placeholder="What are You looking for ..." aria-label="Search">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#36231e" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <label class="visually-hidden" for="q">Search the store</label>
+        <input id="q" type="search" placeholder="What are You looking for ...">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#36231e" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       </div>
       <div class="header__icons">
-        <span>🇺🇸 US</span>
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#36231e" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
-        <span class="badge">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#36231e" stroke-width="1.6"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
-          <span>0</span>
-        </span>
+        <button class="icon-btn" type="button">🇺🇸 US</button>
+        <button class="icon-btn" type="button" aria-label="Account">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+        </button>
+        <button class="icon-btn badge" type="button" aria-label="Cart, 0 items">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <em>0</em>
+        </button>
       </div>
     </div>
-    <nav class="nav">
+    <nav class="nav" aria-label="Main">
       <a href="#">All</a><a href="#" class="has">Yarn Mills</a><a href="#" class="has">Brands</a>
       <a href="#" class="has">Yarn</a><a href="#" class="has">Color</a><a href="#" class="has">Knitting Needles</a>
       <a href="#">Crochet Hooks</a><a href="#">Felting</a><a href="#" class="has">Notions</a>
@@ -342,107 +385,91 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
   </div>
 </header>
 
-<main class="page-width">
-  <div class="breadcrumbs"><a href="#">Home</a> — <a href="#">100natural</a> — <span>Arc 13000 · 1300m/1422yds per 100g/3.5oz · Ultra Fine · 68WS 32Se</span></div>
+<main class="page-width" id="page-view">
+  <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="#">Home</a> — <a href="#">100natural</a> — <span aria-current="page">Arc 13000</span></nav>
 
   <div class="product">
     <div class="product__left">
       <div class="gallery-wrap">
         <div class="gallery">
           <img id="mainImg" src="{{PRODUCT}}" alt="Arc 13000 — cone of brushed cashmere-silk yarn in Black Lux" width="700" height="700">
-          <div id="mainPh" class="ph ph--main" hidden>
-            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3.2"/><path d="M8 5l1.4-2h5.2L16 5"/></svg>
-            <span id="mainPhLabel">Macro — the halo up close</span>
-          </div>
         </div>
-        <div class="variant-badge">Black Lux</div>
+        <div class="variant-badge" id="variantBadge">Black Lux</div>
       </div>
 
-      <div class="thumbs" role="tablist" aria-label="Product images">
-        <button class="thumb is-active" type="button" data-kind="img" aria-label="Cone, full view">
-          <img src="{{PRODUCT}}" alt="" width="700" height="700">
-        </button>
-        <button class="thumb" type="button" data-kind="ph" data-label="Macro — the halo up close" aria-label="Macro — the halo up close">
-          <span class="ph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg><i>Macro</i></span>
-        </button>
-        <button class="thumb" type="button" data-kind="ph" data-label="Knitted swatch, washed and dried" aria-label="Knitted swatch">
-          <span class="ph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 8c3 0 3 8 6 8s3-8 6-8 3 8 4 8"/><path d="M4 16c3 0 3-8 6-8"/></svg><i>Swatch</i></span>
-        </button>
-        <button class="thumb" type="button" data-kind="ph" data-label="Cone next to a ruler for scale" aria-label="Scale reference">
-          <span class="ph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="9" width="18" height="6" rx="1"/><path d="M7 9v3M11 9v4M15 9v3M19 9v4"/></svg><i>Scale</i></span>
-        </button>
-      </div>
     </div>
+
     <div class="product__right">
       <div class="vendor">VIMAR <a href="#">by Vimar</a></div>
-      <h1>Arc 13000 · 1300m/1422yds per 100g/3.5oz · Ultra Fine · 68WS 32Se</h1>
+      <h1>Arc 13000 — brushed cashmere-silk cone yarn</h1>
+      <p class="h1-spec">Ultra Fine · 1300 m / 1422 yds per 100 g</p>
 
-      <div class="price-row"><span class="price">$32.00</span><span class="price-unit">per 100g (3.5oz)</span></div>
-      <div class="price-sub">$0.32 per gram · minimum 50g</div>
-      <div class="price-ship"><u>Shipping</u> calculated at checkout.</div>
-      <div class="shoppay">PAY OVER TIME FOR ORDERS OVER $35.00 WITH <b>shop</b> ⓘ</div>
+      <div class="price-lead">
+        <span class="price">$0.32</span><span class="price-unit">per gram · $32.00 per 100 g</span>
+      </div>
+      <div class="price-ship"><a href="#">Shipping</a> calculated at checkout.</div>
+      <p class="shoppay">Pay over time for orders over $35.00 with <b>shop</b></p>
 
-      <div class="opt-label">Color: Black Lux</div>
-      <div class="swatch"><i></i></div>
+      <div class="opt-label" id="colorLabel">Color: Black Lux</div>
+      <div class="swatch" role="img" aria-labelledby="colorLabel"><i></i></div>
+
+      <dl class="keyfacts">
+        <div><dt>Material composition</dt><dd>68% cashmere · 32% silk</dd></div>
+      </dl>
 
       <div class="buy">
         <div>
-          <label for="qty">Quantity:</label>
+          <label for="qty">Grams</label>
           <div class="stepper">
-            <button type="button" data-step="-50" data-for="qty">−</button>
-            <input id="qty" type="number" value="50" min="50" step="50" inputmode="numeric">
-            <span class="unit">g</span>
-            <button type="button" data-step="50" data-for="qty">+</button>
+            <button type="button" id="qtyMinus" data-step="-50" data-for="qty" aria-label="Decrease grams">−</button>
+            <input id="qty" type="number" value="50" min="50" max="5970" step="50" inputmode="numeric">
+            <span class="unit" aria-hidden="true">g</span>
+            <button type="button" id="qtyPlus" data-step="50" data-for="qty" aria-label="Increase grams">+</button>
           </div>
         </div>
         <div class="total">
-          <b>Total including cones</b>
+          <b>Your total</b>
           <div class="sum" id="total">$16.50</div>
-          <div class="meta" id="totalMeta">50 g / 650 m / 711 yds</div>
+          <div class="meta" id="totalMeta">50 g · 650 m · 711 yds</div>
         </div>
 
         <div>
-          <label for="cones">Cones:</label>
-          <div class="stepper" style="width:132px">
-            <button type="button" data-step="-1" data-for="cones">−</button>
-            <input id="cones" type="number" value="1" min="1" step="1" inputmode="numeric">
-            <button type="button" data-step="1" data-for="cones">+</button>
+          <label for="cones">Cones</label>
+          <div class="stepper" style="max-width:140px">
+            <button type="button" id="conesMinus" data-step="-1" data-for="cones" aria-label="Fewer cones">−</button>
+            <input id="cones" type="number" value="1" min="1" max="1" step="1" inputmode="numeric">
+            <button type="button" id="conesPlus" data-step="1" data-for="cones" aria-label="More cones">+</button>
           </div>
         </div>
-        <p class="hint">Each cone adds $0.50 for winding.</p>
+        <p class="hint">Winding costs $0.50 per cone. Minimum 50 g on each.</p>
+
+        <p class="notice" id="notice" role="status" aria-live="polite"></p>
 
         <div class="buy-actions">
-          <button class="btn" type="button">Add to Cart</button>
-          <button class="btn btn--wish" type="button">♡ Add To Wishlist (0)</button>
+          <button class="btn btn--primary" type="button">Add to Cart</button>
+          <button class="btn btn--ghost" type="button">♡ Save for later</button>
         </div>
         <a class="store-link" href="#">View store information</a>
       </div>
     </div>
   </div>
+
   <div class="facts-strip">
     <div class="fact-card">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 19h16M7 19V9l5-4 5 4v10"/></svg>
-      <b>5970 g in stock</b>
-      <p>Sold by the gram, minimum 50 g. Enter total grams — “100” means 100 g.</p>
+      <b>5970 g left on this cone</b>
+      <p>Sold by the gram, from 50 g up. Enter total grams — “100” means 100 g.</p>
     </div>
     <div class="fact-card">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
       <b>Wound to order</b>
-      <p>$0.50 per cone. Add extra cones if you want the yarn split between them.</p>
+      <p>We wind your amount onto a fresh cone. $0.50 per cone; ask for several and each strand stays on its own.</p>
     </div>
     <div class="fact-card">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
       <b>No returns</b>
-      <p>Yarn is wound for you, so all sales are final. <a href="#">Read more</a></p>
-    </div>
-    <div class="fact-card">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
-      <b>Order limits</b>
-      <p>Minimum 50 g · maximum 5970 g, which is all that is left on this cone.</p>
+      <p>Because it is wound for you, all sales are final. <a href="#">Read the policy</a></p>
     </div>
   </div>
 
-  <section class="desc-full" id="desc-new">
+  <section class="desc-full">
     <h2>About this yarn</h2>
     <p class="sub">Arc 13000 by Vimar · sold by the gram, wound to order</p>
 
@@ -457,9 +484,9 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
         <div class="spec-row"><dt>Made in</dt><dd>Japan</dd></div>
         <div class="spec-row"><dt>Yarn weight category</dt><dd>CYC #0 — Ultra Fine<small>800–1400 m per 100 g (875–1531 yds per 3.5 oz)</small></dd></div>
         <div class="spec-row"><dt>Meterage</dt><dd>1300 m / 1422 yds per 100 g<small>Single strand, straight off the cone</small></dd></div>
+        <div class="spec-row"><dt>On this cone</dt><dd>5970 g available<small>One cone, one dye lot. When it is gone it will not come back.</small></dd></div>
         <div class="spec-row"><dt>Suitable for</dt><dd>Hand knitting, machine knitting, crochet, weaving, multi-strand knitting</dd></div>
         <div class="spec-row"><dt>Weaving yarn standard</dt><dd>Fine Weaving Yarn<small>NM 7.01–10 · Tex 100–142 · YPP 3501–5000</small></dd></div>
-        <div class="spec-row"><dt>Format</dt><dd>Cone, wound to order</dd></div>
         <div class="spec-row"><dt>Sold as</dt><dd>Per gram · minimum order 50 g</dd></div>
       </dl>
 
@@ -481,17 +508,18 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       <p>For an adult size M. Knit a swatch before you order — these are estimates, and yarn cannot be returned.</p>
       <div class="cf-table-wrap">
         <table class="cf-table cf-yardage">
-          <thead><tr><th scope="col">Project</th><th scope="col">Strands</th><th scope="col">Yarn needed</th><th scope="col">Total length</th></tr></thead>
+          <caption>Pick a row and the amount goes straight into the grams field</caption>
+          <thead><tr><th scope="col">Project</th><th scope="col">Finished length</th><th scope="col">Strands</th><th scope="col">Yarn needed</th><th scope="col"><span class="visually-hidden">Add to order</span></th></tr></thead>
           <tbody>
-            <tr><th scope="rowgroup" rowspan="3">Top / Tee</th><td>1 — Ultra Fine</td><td>62–77 g</td><td>800–998 m / 876–1093 yds</td></tr>
-            <tr><td>2 — Lace</td><td>123–154 g</td><td>800–1001 m / 876–1096 yds</td></tr>
-            <tr><td>3 — Fingering</td><td>185–231 g</td><td>801–1000 m / 877–1094 yds</td></tr>
-            <tr><th scope="rowgroup" rowspan="3">Sweater</th><td>1 — Ultra Fine</td><td>85–108 g</td><td>1100–1400 m / 1205–1532 yds</td></tr>
-            <tr><td>2 — Lace</td><td>169–215 g</td><td>1099–1398 m / 1204–1530 yds</td></tr>
-            <tr><td>3 — Fingering</td><td>254–323 g</td><td>1100–1399 m / 1205–1531 yds</td></tr>
-            <tr><th scope="rowgroup" rowspan="3">Cardigan</th><td>1 — Ultra Fine</td><td>108–138 g</td><td>1400–1800 m / 1532–1971 yds</td></tr>
-            <tr><td>2 — Lace</td><td>215–277 g</td><td>1398–1801 m / 1530–1972 yds</td></tr>
-            <tr><td>3 — Fingering</td><td>323–415 g</td><td>1399–1797 m / 1531–1967 yds</td></tr>
+            <tr class="group-start"><th scope="rowgroup" rowspan="3">Top / Tee</th><td rowspan="3">800–1000 m<br>876–1093 yds</td><td>1 — Ultra Fine</td><td>62–77 g</td><td><button class="use-amount" type="button" data-grams="100">Use 100 g</button></td></tr>
+            <tr><td>2 — Lace</td><td>123–154 g</td><td><button class="use-amount" type="button" data-grams="150">Use 150 g</button></td></tr>
+            <tr><td>3 — Fingering</td><td>185–231 g</td><td><button class="use-amount" type="button" data-grams="250">Use 250 g</button></td></tr>
+            <tr class="group-start"><th scope="rowgroup" rowspan="3">Sweater</th><td rowspan="3">1100–1400 m<br>1205–1532 yds</td><td>1 — Ultra Fine</td><td>85–108 g</td><td><button class="use-amount" type="button" data-grams="150">Use 150 g</button></td></tr>
+            <tr><td>2 — Lace</td><td>169–215 g</td><td><button class="use-amount" type="button" data-grams="250">Use 250 g</button></td></tr>
+            <tr><td>3 — Fingering</td><td>254–323 g</td><td><button class="use-amount" type="button" data-grams="350">Use 350 g</button></td></tr>
+            <tr class="group-start"><th scope="rowgroup" rowspan="3">Cardigan</th><td rowspan="3">1400–1800 m<br>1532–1971 yds</td><td>1 — Ultra Fine</td><td>108–138 g</td><td><button class="use-amount" type="button" data-grams="150">Use 150 g</button></td></tr>
+            <tr><td>2 — Lace</td><td>215–277 g</td><td><button class="use-amount" type="button" data-grams="300">Use 300 g</button></td></tr>
+            <tr><td>3 — Fingering</td><td>323–415 g</td><td><button class="use-amount" type="button" data-grams="450">Use 450 g</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -520,43 +548,62 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       <p class="cf-related">More like this: <a href="#">cashmere yarns</a>, <a href="#">silk yarns</a>, <a href="#">ultra fine weight</a>, <a href="#">all cone yarns</a>.</p>
     </div>
   </section>
+
   <h2 class="block-title">Plan your order</h2>
-  <p class="calcs-intro">Choose the finished yarn weight, see how much you need, and decide how many cones to split it between.</p>
+  <p class="calcs-intro">Choose the finished yarn weight, then see how much you need. If you want the yarn split across several cones, that is the third card.</p>
   <div class="calcs">
     <div class="calc">
       <h3>Choose your finished yarn weight</h3>
       <div class="pills" id="strandPills">
         <button class="pill" type="button" aria-pressed="true">1 Strand / Original</button>
-        <button class="pill" type="button" aria-pressed="false">Aran / Bulky / Jumbo</button>
-        <button class="pill" type="button" aria-pressed="false">Worsted</button>
-        <button class="pill" type="button" aria-pressed="false">DK</button>
-        <button class="pill" type="button" aria-pressed="false">Sport</button>
         <button class="pill" type="button" aria-pressed="false">Fingering</button>
+        <button class="pill" type="button" aria-pressed="false">Sport</button>
+        <button class="pill" type="button" aria-pressed="false">DK</button>
+        <button class="pill" type="button" aria-pressed="false">Worsted</button>
+        <button class="pill" type="button" aria-pressed="false">Aran / Bulky / Jumbo</button>
       </div>
-      <p>Custom weight:</p>
       <div class="field">
-        <input type="number" placeholder="Enter value">
-        <select><option>yds/100g</option><option>m/100g</option></select>
+        <label class="visually-hidden" for="customWeight">Custom weight value</label>
+        <input id="customWeight" type="number" placeholder="Custom weight">
+        <label class="visually-hidden" for="customWeightUnit">Custom weight unit</label>
+        <select id="customWeightUnit"><option>yds/100g</option><option>m/100g</option></select>
       </div>
       <p>Hold the selected number of strands together while knitting.</p>
       <p class="note">Approximate calculation. The final yarn weight may vary depending on the yarn's texture and loft.</p>
     </div>
     <div class="calc">
-      <h3>Multiple cones, ready to knit</h3>
-      <p>We can split your yarn evenly between multiple cones. Each strand stays on its own cone. We do not wind multiple strands together.</p>
-      <p>$0.50 winding fee per cone · Min. 50g per cone.</p>
-      <p><a href="#">Learn more about ordering yarn →</a></p>
-    </div>
-    <div class="calc">
       <h3>How much yarn do you need?</h3>
-      <p>First, choose your finished yarn weight on the left. Then enter the finished length you need.</p>
+      <p>Choose the finished yarn weight on the left, then enter the length your pattern calls for.</p>
       <div class="field">
-        <input type="number" placeholder="">
-        <select><option>yards</option><option>meters</option></select>
+        <label class="visually-hidden" for="lengthNeeded">Finished length needed</label>
+        <input id="lengthNeeded" type="number" placeholder="Length needed">
+        <label class="visually-hidden" for="lengthUnit">Length unit</label>
+        <select id="lengthUnit"><option>yards</option><option>meters</option></select>
       </div>
     </div>
+    <div class="calc">
+      <h3>Multiple cones, ready to knit</h3>
+      <p>We can split your yarn evenly between several cones. Each strand stays on its own cone; we do not wind strands together.</p>
+      <p>$0.50 winding per cone · minimum 50 g per cone.</p>
+      <p><a href="#">Learn more about ordering yarn →</a></p>
+    </div>
   </div>
-  <section id="doc">
+
+  <h2 class="block-title">Customer Reviews</h2>
+  <div class="reviews">
+    <span>No reviews yet. If you have knitted with this yarn, other knitters would like to hear about it.</span>
+    <button class="btn btn--ghost" type="button">Write a review</button>
+  </div>
+
+  <h2 class="block-title">Check Out These Related Products</h2>
+  <div class="cards">
+    <a class="card" href="#"><img src="{{REL1}}" alt="Cashmere 2/28 cone yarn, Super Fine">
+      <div class="t">Cashmere 2/28 — 1400 m / 1531 yds per 100 g · Super Fine · 100% cashmere</div><div class="p">$0.44 per gram</div></a>
+    <a class="card" href="#"><img src="{{REL2}}" alt="Cashmere 2/27 cone yarn, Ultra Fine">
+      <div class="t">Cashmere 2/27 — 1350 m / 1477 yds per 100 g · Ultra Fine · 100% cashmere</div><div class="p">$0.42 per gram</div></a>
+  </div>
+
+  <section id="doc" lang="ru" role="tabpanel" aria-labelledby="tab-doc">
     <h2>Структура новой карточки товара</h2>
     <p class="lead">Что где лежит, откуда берётся каждая строка и что нужно завести в Shopify.
       Документ к макету на соседней вкладке. Снято с живой карточки coneandfiber.com 29.08.2026.</p>
@@ -572,7 +619,7 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
         <tr><td>5</td><td>Выбор цвета</td><td>Варианты</td><td>—</td></tr>
         <tr><td>6</td><td>Факты покупки: остаток, возврат</td><td>Метаполя</td><td>Оставить только эти два</td></tr>
         <tr><td>7</td><td>Граммы, бобины, итоговая цена</td><td>Тема + приложение</td><td>—</td></tr>
-        <tr><td>8</td><td>Limit purchases</td><td>Тема</td><td>—</td></tr>
+        <tr><td>8</td><td>Остаток и лимиты</td><td>Метаполя</td><td>Слиты в полосу фактов, отдельной таблицы нет</td></tr>
         <tr class="new-field"><td>9</td><td><b>Описание на всю ширину</b></td><td>Метаполя + текст товара</td><td><b>Новый блок вместо колонки 555px</b></td></tr>
         <tr><td>10</td><td>Три калькулятора</td><td>Секция Custom Liquid</td><td>Оставляем внизу</td></tr>
         <tr><td>11</td><td>Отзывы</td><td>Приложение</td><td>—</td></tr>
@@ -658,54 +705,56 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
     </ul>
   </section>
 
-  <h2 class="block-title">Customer Reviews</h2>
-  <div class="reviews">Be the first to write a review</div>
-
-  <h2 class="block-title">Check Out These Related Products</h2>
-  <div class="cards">
-    <div class="card"><img src="{{REL1}}" alt="Cashmere 2/28 · 1400m/1531yds per 100g/3.5oz · Super Fine · 100WS">
-      <div class="t">Cashmere 2/28 · 1400m/1531yds per 100g/3.5oz · Super Fine · 100WS</div><div class="p">$44.00</div></div>
-    <div class="card"><img src="{{REL2}}" alt="Cashmere 2/27 · 1350m/1477yds per 100g/3.5oz · Ultra Fine · 100WS">
-      <div class="t">Cashmere 2/27 · 1350m/1477yds per 100g/3.5oz · Ultra Fine · 100WS</div><div class="p">$42.00</div></div>
-    <div class="card"><img src="{{REL1}}" alt="Cashmere 2/28 · 1400m/1531yds per 100g/3.5oz · Super Fine · 100WS">
-      <div class="t">Cashmere 2/28 · 1400m/1531yds per 100g/3.5oz · Super Fine · 100WS</div><div class="p">$44.00</div></div>
-    <div class="card"><img src="{{REL2}}" alt="Cashmere 2/27 · 1350m/1477yds per 100g/3.5oz · Ultra Fine · 100WS">
-      <div class="t">Cashmere 2/27 · 1350m/1477yds per 100g/3.5oz · Ultra Fine · 100WS</div><div class="p">$42.00</div></div>
-  </div>
 </main>
+
+<div class="buybar" aria-hidden="false">
+  <div>
+    <div class="sum" id="barTotal">$16.50</div>
+    <div class="meta" id="barMeta">50 g · 650 m</div>
+  </div>
+  <span class="sp" style="flex:1"></span>
+  <button class="btn btn--primary" type="button">Add to Cart</button>
+</div>
 
 <footer>
   <div class="page-width">
     <div class="f-grid">
       <div>
-        <img src="{{LOGO}}" alt="Cone and Fiber Inc" width="130">
+        <img src="{{LOGO}}" alt="Cone and Fiber Inc" width="130" height="36">
         <p class="f-copy">© Copyright, Cone and Fiber Inc, 2026<br>Powered by Shopify</p>
       </div>
       <div>
-        <h4>Purchases</h4>
+        <h2>Purchases</h2>
         <a href="#">Orders</a><br><a href="#">Pick up in store</a><br><a href="#">Wishlist Page</a><br><a href="#">Profile</a>
       </div>
       <div>
-        <h4>Info</h4>
+        <h2>Info</h2>
         <a href="#">About us</a><br><a href="#">How to order</a><br><a href="#">Contact</a><br><a href="#">Wishlist Page</a>
       </div>
       <div>
-        <h4>Contact info</h4>
-        <p>📍 1420 NW 17th Avenue #588<br>Portland, OR 97209</p>
-        <p>✆ +1 (503) 422-2203</p>
+        <h2>Contact info</h2>
+        <p>1420 NW 17th Avenue #588<br>Portland, OR 97209</p>
+        <p>+1 (503) 422-2203</p>
         <p>info@coneandfiber.com</p>
       </div>
     </div>
     <hr class="f-rule">
     <div class="f-sub">
       <div class="lbl">Small batches, rarely restocked</div>
-      <div class="f-form"><input type="email" placeholder="E-mail*" aria-label="E-mail"><button type="button">Subscribe</button></div>
+      <div class="f-form">
+        <label class="visually-hidden" for="nl">E-mail for the newsletter</label>
+        <input id="nl" type="email" placeholder="E-mail">
+        <button type="button">Subscribe</button>
+      </div>
       <div>
         <div class="f-copy" style="margin:0 0 6px">We accept:</div>
-        <div class="pay"><i>amazon</i><i>AMEX</i><i>Pay</i><i>Diners</i><i>Disc</i><i>GPay</i><i>MC</i><i>PayPal</i><i>shop</i><i>Klarna</i><i>Venmo</i><i>VISA</i></div>
+        <div class="pay" aria-hidden="true"><i>amazon</i><i>AMEX</i><i>Pay</i><i>Diners</i><i>Disc</i><i>GPay</i><i>MC</i><i>PayPal</i><i>shop</i><i>Klarna</i><i>Venmo</i><i>VISA</i></div>
       </div>
     </div>
-    <div class="social"><span class="f-copy" style="margin:0">Follow Us:</span><i>f</i><i>ig</i><i>yt</i></div>
+    <div class="social">
+      <span class="f-copy" style="margin:0">Follow Us:</span>
+      <a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Instagram">ig</a><a href="#" aria-label="YouTube">yt</a>
+    </div>
     <div class="f-legal">
       <a href="#">Privacy policy</a><a href="#">Contact information</a><a href="#">Refund policy</a>
       <a href="#">Terms of service</a><a href="#">Shipping policy</a>
@@ -714,64 +763,104 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
 </footer>
 
 <script>
-// ---- вкладки «Карточка / Структура» ------------------------------------
+// ---- вкладки «Карточка / Структура» -------------------------------------
 var tabPage = document.getElementById('tab-page');
 var tabDoc  = document.getElementById('tab-doc');
-function showTab(which){
-  var isDoc = which === 'doc';
+function showTab(isDoc){
   document.body.classList.toggle('view-doc', isDoc);
-  tabDoc.setAttribute('aria-pressed', String(isDoc));
-  tabPage.setAttribute('aria-pressed', String(!isDoc));
+  tabDoc.setAttribute('aria-selected', String(isDoc));
+  tabPage.setAttribute('aria-selected', String(!isDoc));
   window.scrollTo(0, 0);
 }
-tabPage.addEventListener('click', function(){ showTab('page'); });
-tabDoc.addEventListener('click', function(){ showTab('doc'); });
+tabPage.addEventListener('click', function(){ showTab(false); });
+tabDoc.addEventListener('click', function(){ showTab(true); });
 
-// ---- галерея: переключение кадров и слотов под съёмку --------------------
-var mainImg = document.getElementById('mainImg');
-var mainPh = document.getElementById('mainPh');
-var mainPhLabel = document.getElementById('mainPhLabel');
-Array.prototype.forEach.call(document.querySelectorAll('.thumb'), function(th){
-  th.addEventListener('click', function(){
-    Array.prototype.forEach.call(document.querySelectorAll('.thumb'), function(x){ x.classList.remove('is-active'); });
-    th.classList.add('is-active');
-    var isPh = th.getAttribute('data-kind') === 'ph';
-    mainPh.hidden = !isPh;
-    mainImg.hidden = isPh;
-    if (isPh) mainPhLabel.textContent = th.getAttribute('data-label');
-  });
-});
-
-// ---- счётчики граммов и бобин -------------------------------------------
-var PRICE_PER_GRAM = 0.32, M_PER_100G = 1300, YDS_PER_100G = 1422, CONE_FEE = 0.50;
+// ---- количество, бобины, итог -------------------------------------------
+var PRICE_PER_GRAM = 0.32, M_PER_100G = 1300, YDS_PER_100G = 1422,
+    CONE_FEE = 0.50, MIN_G = 50, MAX_G = 5970;
 var qty = document.getElementById('qty');
 var cones = document.getElementById('cones');
 var totalEl = document.getElementById('total');
 var metaEl = document.getElementById('totalMeta');
-function recalc(){
-  var g = Math.max(50, parseInt(qty.value, 10) || 50);
-  var c = Math.max(1, parseInt(cones.value, 10) || 1);
-  var sum = g * PRICE_PER_GRAM + c * CONE_FEE;
-  totalEl.textContent = '$' + sum.toFixed(2);
-  metaEl.textContent = g + ' g / ' + Math.round(g * M_PER_100G / 100) + ' m / ' + Math.round(g * YDS_PER_100G / 100) + ' yds';
+var barTotal = document.getElementById('barTotal');
+var barMeta = document.getElementById('barMeta');
+var notice = document.getElementById('notice');
+var qtyMinus = document.getElementById('qtyMinus'), qtyPlus = document.getElementById('qtyPlus');
+var conesMinus = document.getElementById('conesMinus'), conesPlus = document.getElementById('conesPlus');
+
+function money(n){ return '$' + n.toFixed(2); }
+
+// Значение всегда возвращается в поле, чтобы поле и цена не расходились.
+function readGrams(commit){
+  var raw = parseInt(qty.value, 10);
+  var g = isNaN(raw) ? MIN_G : raw;
+  var msg = '';
+  if (g > MAX_G){ g = MAX_G; msg = MAX_G + ' g is all that is left on this cone.'; }
+  if (g < MIN_G){ g = MIN_G; msg = 'The smallest order is ' + MIN_G + ' g.'; }
+  if (commit || String(g) !== qty.value) qty.value = g;
+  return { g: g, msg: msg };
 }
-Array.prototype.forEach.call(document.querySelectorAll('[data-step]'), function(b){
+
+function recalc(commit){
+  var r = readGrams(commit);
+  var g = r.g;
+  var maxCones = Math.max(1, Math.floor(g / MIN_G));
+  cones.max = maxCones;
+  var c = parseInt(cones.value, 10);
+  if (isNaN(c) || c < 1) c = 1;
+  var coneMsg = '';
+  if (c > maxCones){
+    c = maxCones;
+    coneMsg = g + ' g splits into at most ' + maxCones + ' cone' + (maxCones > 1 ? 's' : '') + ' at 50 g each.';
+  }
+  if (commit || String(c) !== cones.value) cones.value = c;
+
+  var sum = g * PRICE_PER_GRAM + c * CONE_FEE;
+  var m = Math.round(g * M_PER_100G / 100);
+  var yds = Math.round(g * YDS_PER_100G / 100);
+  totalEl.textContent = money(sum);
+  metaEl.textContent = g + ' g · ' + m + ' m · ' + yds + ' yds';
+  barTotal.textContent = money(sum);
+  barMeta.textContent = g + ' g · ' + m + ' m';
+  notice.textContent = r.msg || coneMsg;
+
+  qtyMinus.disabled = g <= MIN_G;
+  qtyPlus.disabled = g >= MAX_G;
+  conesMinus.disabled = c <= 1;
+  conesPlus.disabled = c >= maxCones;
+}
+
+[].slice.call(document.querySelectorAll('[data-step]')).forEach(function(b){
   b.addEventListener('click', function(){
     var input = document.getElementById(b.getAttribute('data-for'));
+    var step = parseInt(b.getAttribute('data-step'), 10);
     var min = parseInt(input.getAttribute('min'), 10);
-    input.value = Math.max(min, (parseInt(input.value, 10) || min) + parseInt(b.getAttribute('data-step'), 10));
-    recalc();
+    input.value = Math.max(min, (parseInt(input.value, 10) || min) + step);
+    recalc(true);
   });
 });
-qty.addEventListener('input', recalc);
-cones.addEventListener('input', recalc);
-recalc();
+qty.addEventListener('input', function(){ recalc(false); });
+cones.addEventListener('input', function(){ recalc(false); });
+qty.addEventListener('blur', function(){ recalc(true); });
+cones.addEventListener('blur', function(){ recalc(true); });
+recalc(true);
 
-// ---- кнопки веса нити: только переключение, без пересчёта ---------------
+// ---- «Use N g»: путь от таблицы расхода к полю заказа --------------------
+[].slice.call(document.querySelectorAll('.use-amount')).forEach(function(b){
+  b.addEventListener('click', function(){
+    qty.value = b.getAttribute('data-grams');
+    recalc(true);
+    var target = document.querySelector('.product__right');
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    qty.focus({ preventScroll: true });
+  });
+});
+
+// ---- кнопки веса нити: только выбор, без пересчёта -----------------------
 var pills = document.getElementById('strandPills');
 pills.addEventListener('click', function(e){
   var b = e.target.closest('.pill'); if(!b) return;
-  Array.prototype.forEach.call(pills.querySelectorAll('.pill'), function(p){ p.setAttribute('aria-pressed','false'); });
+  [].slice.call(pills.querySelectorAll('.pill')).forEach(function(p){ p.setAttribute('aria-pressed','false'); });
   b.setAttribute('aria-pressed','true');
 });
 </script>
