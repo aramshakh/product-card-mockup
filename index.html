@@ -181,12 +181,7 @@ tr.new-field td,tr.new-field th{background:#fdf6f4}
 .spec-row dd small{display:block;font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.45}
 .from-meta{display:inline-block;font-size:11px;letter-spacing:.03em;text-transform:uppercase;
   color:#6f8a72;background:#eaf2ea;border-radius:99px;padding:2px 8px;margin-left:8px;vertical-align:1px}
-.spec-note{font-size:13.5px;color:var(--muted);margin:0 0 26px;line-height:1.5}
 
-/* «чего не хватает» — служебная пометка для Елены, на сайте её не будет */
-.gap{border:1px dashed #c9a9a1;background:#fdf6f4;border-radius:4px;padding:14px 16px;margin:0 0 26px}
-.gap b{display:block;font-size:14px;font-weight:600;color:#8a5a4e;margin-bottom:6px}
-.gap p{margin:0;font-size:14px;line-height:1.55;color:#7a5a52;max-width:none}
 
 /* иконочные факты в правой колонке (как в теме) */
 .advantages{margin:22px 0 0;display:grid;gap:16px}
@@ -280,16 +275,12 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
 </style>
 </head>
 <body>
-
-<!-- ДЕМО-ПАНЕЛЬ. На реальном сайте её нет. -->
 <div class="demo">
   <b>Cone &amp; Fiber</b> · новая карточка товара
   <div class="demo-toggle" role="tablist" aria-label="Что показать">
     <button type="button" id="tab-page" role="tab" aria-pressed="true">Карточка</button>
     <button type="button" id="tab-doc" role="tab" aria-pressed="false">Структура</button>
   </div>
-  <span class="sp"></span>
-  <small>Arc 13000 · 68% кашемир, 32% шёлк</small>
 </div>
 
 <header class="header">
@@ -324,8 +315,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
   <div class="breadcrumbs"><a href="#">Home</a> — <a href="#">100natural</a> — <span>Arc 13000 · 1300m/1422yds per 100g/3.5oz · Ultra Fine · 68WS 32Se</span></div>
 
   <div class="product">
-
-    <!-- ЛЕВАЯ КОЛОНКА: фото. В текущей версии сюда же падает описание. -->
     <div class="product__left">
       <div class="gallery-wrap">
         <div class="gallery">
@@ -334,8 +323,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
         <div class="variant-badge">Black Lux</div>
       </div>
     </div>
-
-    <!-- ПРАВАЯ КОЛОНКА: покупка. Липкая — не уезжает, пока читают описание. -->
     <div class="product__right">
       <div class="vendor">VIMAR <a href="#">by Vimar</a></div>
       <h1>Arc 13000 · 1300m/1422yds per 100g/3.5oz · Ultra Fine · 68WS 32Se</h1>
@@ -347,9 +334,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
 
       <div class="opt-label">Color: Black Lux</div>
       <div class="swatch"><i></i></div>
-
-      <!-- В правой колонке остаётся только то, что нужно для покупки.
-           Характеристики переехали в общий блок описания и не дублируются. -->
       <div class="advantages">
         <div class="adv">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a716b" stroke-width="1.4"><path d="M4 19h16M7 19V9l5-4 5 4v10"/></svg>
@@ -403,8 +387,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       </table>
     </div>
   </div>
-
-  <!-- ================= ОПИСАНИЕ: НОВАЯ ВЕРСИЯ, НА ВСЮ ШИРИНУ ================= -->
   <section class="desc-full" id="desc-new">
     <h2>About this yarn</h2>
     <p class="sub">Arc 13000 by Vimar · sold by the gram, wound to order</p>
@@ -425,12 +407,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
         <div class="spec-row"><dt>Format</dt><dd>Cone, wound to order</dd></div>
         <div class="spec-row"><dt>Sold as</dt><dd>Per gram · minimum order 50 g</dd></div>
       </dl>
-      <p class="spec-note">Эти строки берутся из полей товара в Shopify, а не из текста. Заполняются один раз в карточке — выводятся одинаково на всех товарах.</p>
-
-      <div class="gap">
-        <b>Здесь не хватает того, из-за чего бобинную пряжу боятся покупать</b>
-        <p>Ни в одном из 139 товаров нет ответа: есть ли на нити замасливатель и надо ли стирать до вязания, сколько граммов на бобине, номер пряжи, плотность вязания в петлях на 10 см, повторится ли партия. Это пять новых полей в Shopify, а не текст.</p>
-      </div>
 
       <h3>Strands and needles</h3>
       <p>Hold more strands together to get a thicker yarn. Larger needles than the meterage suggests work best — the halo needs room to open up.</p>
@@ -489,8 +465,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       <p class="cf-related">More like this: <a href="#">cashmere yarns</a>, <a href="#">silk yarns</a>, <a href="#">ultra fine weight</a>, <a href="#">all cone yarns</a>.</p>
     </div>
   </section>
-
-  <!-- ================= КАЛЬКУЛЯТОРЫ ================= -->
   <h2 class="block-title">Plan your order</h2>
   <p class="calcs-intro">Choose the finished yarn weight, see how much you need, and decide how many cones to split it between.</p>
   <div class="calcs">
@@ -527,9 +501,6 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       </div>
     </div>
   </div>
-
-
-  <!-- ================= ВКЛАДКА: СТРУКТУРА ================= -->
   <section id="doc">
     <h2>Структура новой карточки товара</h2>
     <p class="lead">Что где лежит, откуда берётся каждая строка и что нужно завести в Shopify.
