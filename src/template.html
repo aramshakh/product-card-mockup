@@ -149,6 +149,31 @@ h1{font-size:18px;font-weight:600;line-height:1.15;letter-spacing:-.36px;color:v
 .ph--main{aspect-ratio:1/1;gap:14px}
 .ph--main span{font-size:15px;color:var(--muted-2)}
 
+.deals{margin:18px 0 0;padding:14px 16px;background:var(--pink);border-radius:4px}
+.deals b{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.deals ul{margin:0;padding:0;list-style:none}
+.deals li{font-size:13px;line-height:1.55;color:var(--ink);padding-left:16px;position:relative}
+.deals li:before{content:"\2713";position:absolute;left:0;color:#3c6a4c}
+.deals a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+
+.ship-return{margin:0}
+.sr-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.sr-col h3{font-size:16px;font-weight:600;color:var(--ink);margin:0 0 12px;
+  padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sr-list{margin:0;display:grid}
+.sr-list > div{display:grid;grid-template-columns:minmax(130px,155px) 1fr;gap:16px;
+  padding:10px 0;border-bottom:1px solid var(--line-soft)}
+.sr-list > div:last-child{border-bottom:0}
+.sr-list dt{margin:0;font-size:13.5px;color:var(--muted-2)}
+.sr-list dd{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.sr-list dd b{font-weight:600;color:var(--ink)}
+.sr-list a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.sr-note{margin:12px 0 0;font-size:14px}
+.sr-note a{color:var(--muted-2);text-decoration:underline;text-underline-offset:2px}
+.sr-foot{margin:20px 0 0;font-size:13.5px;color:var(--muted-2);line-height:1.55;max-width:70ch}
+@media (max-width:760px){.sr-grid{grid-template-columns:1fr;gap:28px}
+  .sr-list > div{grid-template-columns:1fr;gap:2px}}
+
 .facts-strip{display:grid;grid-template-columns:repeat(4,1fr);margin:34px 0 0;
   background:#fff;border:1px solid var(--line-soft);border-radius:4px}
 .fact-card{padding:18px 20px;border-right:1px solid var(--line-soft)}
@@ -449,6 +474,15 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
           <button class="btn btn--wish" type="button">♡ Add To Wishlist (0)</button>
         </div>
         <a class="store-link" href="#">View store information</a>
+
+        <div class="deals">
+          <b>Permanent deals</b>
+          <ul>
+            <li>10% off orders over $250</li>
+            <li>Free US shipping on orders over $500</li>
+          </ul>
+        </div>
+
       </div>
     </div>
   </div>
@@ -553,6 +587,40 @@ footer{background:var(--pink);margin-top:56px;padding:34px 0 24px}
       <p class="cf-related">More like this: <a href="#">cashmere yarns</a>, <a href="#">silk yarns</a>, <a href="#">ultra fine weight</a>, <a href="#">all cone yarns</a>.</p>
     </div>
   </section>
+
+  <h2 class="block-title">Shipping &amp; returns</h2>
+  <section class="ship-return" id="shipping-returns">
+    <div class="sr-grid">
+      <div class="sr-col">
+        <h3>Shipping</h3>
+        <dl class="sr-list">
+          <div><dt>Ships from</dt><dd>Portland, Oregon, USA</dd></div>
+          <div><dt>Carrier</dt><dd>USPS</dd></div>
+          <div><dt>Handling time</dt><dd>Next business day, except Mondays</dd></div>
+          <div><dt>Delivery</dt><dd>Standard USPS windows, depending on the service chosen at checkout</dd></div>
+          <div><dt>Shipping cost</dt><dd>Calculated at checkout · <b>free over $500</b></dd></div>
+          <div><dt>International</dt><dd>Available via USPS. Customs duties, taxes and import fees are paid by the customer</dd></div>
+          <div><dt>Tracking</dt><dd>Emailed once the order ships</dd></div>
+        </dl>
+        <p class="sr-note"><a href="/policies/shipping-policy">Full shipping policy</a></p>
+      </div>
+
+      <div class="sr-col">
+        <h3>Returns</h3>
+        <dl class="sr-list">
+          <div><dt>Returns accepted</dt><dd><b>No — all sales are final</b></dd></div>
+          <div><dt>Why</dt><dd>Yarn is wound to order from a cone, so it cannot be resold</dd></div>
+          <div><dt>Exceptions</dt><dd>Wrong, damaged or defective item</dd></div>
+          <div><dt>How to claim</dt><dd>Email <a href="mailto:info@coneandfiber.com">info@coneandfiber.com</a> with the order number, proof of purchase and photos</dd></div>
+          <div><dt>Return shipping</dt><dd>Prepaid label provided once the claim is approved</dd></div>
+        </dl>
+        <p class="sr-note"><a href="/policies/refund-policy">Full return policy</a></p>
+      </div>
+    </div>
+    <p class="sr-foot">Unauthorised returns sent without prior approval are not accepted.
+      Custom, sale and discounted items are non-returnable.</p>
+  </section>
+
   <h2 class="block-title">Plan your order</h2>
   <p class="calcs-intro">Choose the finished yarn weight, see how much you need, and decide how many cones to split it between.</p>
   <div class="calcs">
